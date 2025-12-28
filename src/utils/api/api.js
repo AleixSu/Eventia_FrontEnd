@@ -1,4 +1,4 @@
-const url = 'http://localhost:3000/api/v1'
+const url = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'
 
 export const API = async ({
   endpoint,
