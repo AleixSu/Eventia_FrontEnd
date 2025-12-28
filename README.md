@@ -6,6 +6,17 @@ Interfaz responsive que consume la API REST de EventHub, permitiendo registro de
 
 ---
 
+## Aplicación desplegada
+
+Frontend (Vercel):
+https://project13-final-project-front-end-git-main-aleixsus-projects.vercel.app
+
+Repositorio Backend:
+https://github.com/AleixSu/Project13.Final_Project_BackEnd
+
+Backend desplegado (Render):
+https://eventhub-backend-7hna.onrender.com
+
 ## Instalación y uso
 
 ### 1. Clona el repositorio:
