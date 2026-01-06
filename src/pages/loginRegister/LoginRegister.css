@@ -103,13 +103,13 @@
 }
 
 .redInput {
-  border: 1px rgb(255, 83, 83) solid !important;
+  border: 1px var(--color-text-errorMessage) solid !important;
 }
 .formError {
   position: absolute;
   width: 70%;
   bottom: 20px;
-  color: #d33;
+  color: var(--color-text-errorMessage);
 
   display: block;
 }

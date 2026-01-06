@@ -39,6 +39,10 @@
   box-sizing: border-box;
 }
 
+.createLocationForm input:focus {
+  outline: none;
+}
+
 #locationImg {
   padding: 0;
 }

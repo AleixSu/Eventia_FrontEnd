@@ -75,8 +75,9 @@ const LocationForm = () => {
             labelText='Country'
             className='formCountry'
             register={register}
+            required={true}
             errors={formState.errors}
-            validation={{ required: 'Country is required' }}
+            errorMessage={'Country is required!'}
           />
         </div>
         <div className='row_element_admin'>
@@ -86,7 +87,9 @@ const LocationForm = () => {
             type='file'
             className='locationImgForm'
             register={register}
+            required={true}
             errors={formState.errors}
+            errorMessage={'You have to choose an Image for the location!'}
             accept='image/*'
           />
         </div>

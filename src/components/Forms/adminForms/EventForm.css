@@ -38,6 +38,12 @@
   border-radius: var(--radius-xs);
   box-sizing: border-box;
 }
+.createEventForm input:focus {
+  outline: none;
+}
+.redInput {
+  border: 1px var(--color-text-errorMessage) solid !important;
+}
 
 #eventImg,
 #eventBgImg {
@@ -130,7 +136,8 @@
 }
 
 .formCountryLocation {
-  width: 30%;
+  width: 100%;
+  height: 100%;
 }
 
 .formCityLocation {

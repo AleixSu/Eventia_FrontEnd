@@ -18,6 +18,7 @@
   --color-nav: #1a1a1ad2;
   --color-separator: #c9c9c96b;
   --color-profileMenu: #dad8d84f;
+  --color-profileMenu-query: #dad8d8af;
 
   /* colores vivos principales*/
   --color-primary: #ff8a2b;
@@ -31,6 +32,7 @@
   --color-surface-dark: #242424;
   --color-text-dark: #f0f0f0;
   --color-text-muted-dark: #a0a0a0;
+  --color-text-errorMessage: #ff5353;
 
   --color-primary-dark: #ff7597;
   --color-secondary-dark: #00d6b3;

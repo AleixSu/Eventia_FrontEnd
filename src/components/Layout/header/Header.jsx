@@ -5,11 +5,13 @@ import Button from '../../UI/button/Button'
 import { useModalContext } from '../../../context/ModalContext'
 import { useAuthContext } from '../../../context/AuthContext'
 import MenuProfile from './MenuProfile'
+import { headerSrc } from '../../../constants/headerConstants'
 
 const Header = () => {
   const { openLogin } = useModalContext()
   const { user } = useAuthContext()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isUlActive, setIsUlActive] = useState(false)
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev)
@@ -23,7 +25,10 @@ const Header = () => {
     <header>
       <img src='/images/lightLogo.png' alt='logoImg' />
       <nav>
-        <ul id='headerUl'>
+        <div id='burgerMenu' onClick={() => setIsUlActive(!isUlActive)}>
+          <img src={headerSrc.burgerMenuImg} alt='burgerMenu' />
+        </div>
+        <ul id='headerUl' className={isUlActive ? 'active' : null}>
           <li>
             <NavLink to=''>HOME</NavLink>
           </li>

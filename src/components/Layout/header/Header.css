@@ -127,6 +127,22 @@ nav {
   header a {
     font-size: 10px;
   }
+  .loginHeader {
+    font-size: 10px;
+  }
+  .profileHeader {
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .profileHeader > div {
+    width: 100%;
+  }
+
+  .profileHeader > div > h3 {
+    font-size: 10px;
+  }
 }
 @media (max-width: 500px) {
   header {
@@ -139,11 +155,12 @@ nav {
     gap: 30px;
     top: 0vh;
     opacity: 0;
-    width: 100%;
+    width: 98%;
     position: absolute;
-    left: 0;
+    left: 1%;
     background-color: var(--color-button-pressed);
-    padding: 5vh 0;
+    padding: 1vh 0;
+    border-radius: var(--radius-xs);
     transition: var(--transition-normal);
     z-index: -10;
     pointer-events: none;
@@ -161,13 +178,9 @@ nav {
 
   header a {
     font-size: 17px;
-
-    color: var(--color-bg);
     transition: var(--transition-fast);
   }
-  header a:hover {
-    color: rgba(255, 255, 255, 0.363);
-  }
+
   #burgerMenu {
     position: absolute;
     top: 2.5vh;
@@ -181,8 +194,24 @@ nav {
   #burgerMenu img {
     width: 100%;
   }
-  .profile {
-    background-color: transparent;
+  .profileHeader {
+    background-color: rgba(255, 255, 255, 0.363);
     width: 100%;
+    height: 100%;
+    transition: all 0.3s ease-in-out;
+    display: flex;
+  }
+  .profileHeader:hover {
+    background-color: rgba(255, 255, 255, 0.685);
+    width: 100%;
+  }
+  .profileHeader > div {
+    width: 100%;
+    height: 100%;
+  }
+  .loginHeader {
+    font-size: 17px;
+    width: 100%;
+    height: 100%;
   }
 }

@@ -54,7 +54,6 @@ const EventForm = () => {
 
     const formData = new FormData()
 
-    // Añadir campos de texto
     formData.append('eventName', values.eventName)
     formData.append('date', values.date)
     formData.append('locationCountry', values.locationCountry)
@@ -62,7 +61,6 @@ const EventForm = () => {
     formData.append('maxCapacity', values.maxCapacity)
     formData.append('description', values.description)
 
-    // Añadir imágenes si existen
     if (values.eventImg && values.eventImg.length > 0) {
       formData.append('eventImg', values.eventImg[0])
     }
@@ -119,6 +117,7 @@ const EventForm = () => {
               register={register}
               errors={formState.errors}
               required={true}
+              errorMessage={'Event Name is required!'}
             />
             <Input
               id='date'
@@ -128,17 +127,22 @@ const EventForm = () => {
               register={register}
               errors={formState.errors}
               required={true}
+              errorMessage={'Event Date is required!'}
             />
           </div>
 
           <div className='row_element_admin'>
             <div className='formCountryWrapper'>
-              <label htmlFor='locationCountry'>Country *</label>
+              <label htmlFor='locationCountry'>Country</label>
               <select
                 id='locationCountry'
-                className='formCountryLocation'
+                className={
+                  formState.errors.locationCountry
+                    ? 'redInput formCountryLocation'
+                    : 'formCountryLocation'
+                }
                 {...register('locationCountry', {
-                  required: 'Country is required'
+                  required: 'You have to select a country!'
                 })}
               >
                 <option value=''>Select a country</option>
@@ -149,7 +153,7 @@ const EventForm = () => {
                 ))}
               </select>
               {formState.errors.locationCountry && (
-                <span className='error'>
+                <span className='errorMessage'>
                   {formState.errors.locationCountry.message}
                 </span>
               )}
@@ -162,6 +166,7 @@ const EventForm = () => {
               register={register}
               errors={formState.errors}
               required={true}
+              errorMessage={'City is required!'}
             />
             <Input
               id='maxCapacity'
@@ -171,6 +176,7 @@ const EventForm = () => {
               register={register}
               errors={formState.errors}
               required={true}
+              errorMessage={'Capacity is required!'}
             />
           </div>
 
@@ -184,6 +190,7 @@ const EventForm = () => {
               register={register}
               errors={formState.errors}
               required={true}
+              errorMessage={'An image of the event is required!'}
             />
             <Input
               id='eventBgImg'
@@ -194,23 +201,28 @@ const EventForm = () => {
               register={register}
               errors={formState.errors}
               required={true}
+              errorMessage={
+                'An image for the background of the event is required!'
+              }
             />
           </div>
 
           <div className='row_element_admin'>
             <div style={{ width: '100%' }}>
-              <label htmlFor='formDescription'>Description *</label>
+              <label htmlFor='formDescription'>Description</label>
               <textarea
                 {...register('description', {
-                  required: 'Description is required'
+                  required: 'Description is required!'
                 })}
                 id='formDescription'
+                className={formState.errors.description ? 'redInput' : null}
                 placeholder='Write a description for the event...'
                 rows={8}
+                e
                 style={{ width: '100%' }}
               ></textarea>
               {formState.errors.description && (
-                <span className='error'>
+                <span className='errorMessage'>
                   {formState.errors.description.message}
                 </span>
               )}

@@ -135,6 +135,10 @@
   transform: translateX(20%);
 }
 
+.errorMessage {
+  color: var(--color-text-errorMessage);
+}
+
 @media (max-width: 550px) {
   .loginRegisterArticle {
     width: 100vw;

@@ -10,7 +10,7 @@ const Location = () => {
     <main id='main'>
       <section id='location'>
         <Banner
-          imageUrl={'./public/images/locationsBg.png'}
+          imageUrl={'./images/locationsBg.png'}
           logo={locationsSrc.logoBanner}
         />
         <article id='articleLocations'>

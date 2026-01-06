@@ -9,10 +9,11 @@ const Input = ({
   required = false,
   register,
   errors,
+  errorMessage,
   accept
 }) => {
   const rules = {
-    ...(required && { required: 'This field is required' })
+    ...(required && { required: errorMessage })
   }
 
   return (
@@ -21,12 +22,14 @@ const Input = ({
       <input
         {...register(id, rules)}
         type={type}
-        className={id}
+        className={errors?.[id] ? `${id} redInput` : id}
         id={id}
         placeholder={placeholder}
         accept={accept}
       />
-      {errors?.[id] && <p className='formError'>{errors[id].message}</p>}
+      <span className='errorMessage'>
+        {errors?.[id] ? errorMessage : null}{' '}
+      </span>
     </div>
   )
 }

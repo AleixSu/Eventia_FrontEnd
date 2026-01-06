@@ -11,7 +11,7 @@ const Event = () => {
     <main id='main'>
       <section id='event'>
         <Banner
-          imageUrl={'./public/images/eventsBg.jpg'}
+          imageUrl={'./images/eventsBg.jpg'}
           logo={locationsSrc.logoBanner}
         />
         <article id='articleEvents'>
