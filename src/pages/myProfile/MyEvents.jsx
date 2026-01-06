@@ -1,6 +1,6 @@
-import { myEventsSrc } from '../../../../../Proyecto 10. Full Stack Javascript/frontEnd/src/constants/myEventsConstants'
 import Banner from '../../components/Layout/banner/Banner'
 import EventLocationCard from '../../components/UI/card/eventCard/EventLocationCard'
+import { myEventsSrc } from '../../constants/myEventsConstants'
 import { useAuthContext } from '../../context/AuthContext'
 import { API } from '../../utils/api/api'
 import './MyEvents.css'
