@@ -9,7 +9,7 @@ const AdminArea = () => {
     <section id='adminArea'>
       <Banner
         className={'backgroundAdminArea'}
-        imageUrl={'./public/images/adminAreaBg.jpeg'}
+        imageUrl={'./images/adminAreaBg.jpeg'}
         logo={'/images/adminLogo.png'}
       />
       <article id='articleAdminArea'>
