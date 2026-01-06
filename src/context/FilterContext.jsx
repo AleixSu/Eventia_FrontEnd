@@ -13,6 +13,7 @@ export const useFilter = () => {
 
 export const FilterProvider = ({ children }) => {
   const [selectedCountries, setSelectedCountries] = useState({})
+  const [searchValue, setSearchValue] = useState('')
 
   const toggleCountry = (countryName, countryId) => {
     setSelectedCountries((prev) => ({
@@ -28,24 +29,12 @@ export const FilterProvider = ({ children }) => {
     setSelectedCountries({})
   }
 
-  const getSelectedCountryIds = () => {
-    return Object.values(selectedCountries)
-      .filter((country) => country.selected)
-      .map((country) => country.id)
-  }
-
-  const getSelectedCountryNames = () => {
-    return Object.entries(selectedCountries)
-      .filter(([_, data]) => data.selected)
-      .map(([name, _]) => name)
-  }
-
   const value = {
     selectedCountries,
     toggleCountry,
     clearCountries,
-    getSelectedCountryIds,
-    getSelectedCountryNames
+    searchValue,
+    setSearchValue
   }
 
   return (

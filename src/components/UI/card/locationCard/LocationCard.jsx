@@ -1,9 +1,15 @@
 import React from 'react'
 import './LocationCard.css'
+import { NavLink } from 'react-router-dom'
 
 const LocationCard = ({ location }) => {
   return (
-    <div className='locationCard'>
+    <NavLink
+      to={`Location/${location._id}`}
+      key={location._id}
+      className='locationCard'
+      state={{ location }}
+    >
       {location.locationImg && (
         <div className='locationCardImage'>
           <img src={location.locationImg} alt={location.country} />
@@ -23,7 +29,7 @@ const LocationCard = ({ location }) => {
           </div>
         )}
       </div>
-    </div>
+    </NavLink>
   )
 }
 

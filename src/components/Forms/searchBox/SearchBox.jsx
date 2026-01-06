@@ -1,10 +1,22 @@
 import React from 'react'
 import './SearchBox.css'
+import { useFilter } from '../../../context/FilterContext'
 
 const SearchBox = () => {
+  const { searchValue, setSearchValue } = useFilter()
+
   return (
     <div className='searchBar'>
-      <input className='searchInput' type='text' name='' placeholder='Search' />
+      <input
+        className='searchInput'
+        type='text'
+        name=''
+        placeholder='Search'
+        value={searchValue}
+        onChange={(e) => {
+          setSearchValue(e.target.value)
+        }}
+      />
       <button className='searchButton'>
         <img
           className='searchIcon'
@@ -12,7 +24,6 @@ const SearchBox = () => {
           alt='searchImg'
         />
       </button>{' '}
-      {/* Meter onClick y hacer cositas */}
     </div>
   )
 }

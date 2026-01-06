@@ -9,7 +9,7 @@ const EventsList = () => {
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const { selectedCountries } = useFilter()
+  const { searchValue, selectedCountries } = useFilter()
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -53,7 +53,12 @@ const EventsList = () => {
     }
 
     fetchEvents()
-  }, [selectedCountries])
+  }, [selectedCountries, searchValue])
+
+  const filteredEvents = events.filter((event) =>
+    event.eventName.toLowerCase().includes(searchValue.toLowerCase())
+  )
+  console.log(filteredEvents)
 
   if (loading) {
     return <div className='loadingText'>Loading Events...</div>
@@ -72,17 +77,18 @@ const EventsList = () => {
       ) : (
         <>
           <div className='eventsCount'>
-            <h5>Events found: {events.length}</h5>
+            <h5>Events found: {filteredEvents.length}</h5>
           </div>
           <div className='eventsGrid'>
-            {events.map((event) => (
-              <EventCard
-                key={event._id}
-                src={event.eventImg}
-                eventName={event.eventName}
-                eventCity={event.locationCity}
-              />
-            ))}
+            <div className='eventsGrid'>
+              {filteredEvents.length === 0 ? (
+                <p>No events were found matching your criteria.</p>
+              ) : (
+                filteredEvents.map((event) => (
+                  <EventCard key={event._id} event={event} />
+                ))
+              )}
+            </div>
           </div>
         </>
       )}

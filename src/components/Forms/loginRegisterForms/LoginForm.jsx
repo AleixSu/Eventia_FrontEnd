@@ -46,10 +46,8 @@ const LoginForm = ({ onSuccess }) => {
           type='email'
           placeholder='Email'
           id='email'
+          className={formState.errors.email ? 'redInput' : ''}
         />
-        {formState.errors.email && (
-          <p className='formError'>{formState.errors.email.message}</p>
-        )}
 
         <input
           {...register('password', {
@@ -58,13 +56,16 @@ const LoginForm = ({ onSuccess }) => {
           type='password'
           placeholder='Password'
           id='password'
+          className={formState.errors.password ? 'redInput' : ''}
         />
-        {formState.errors.password && (
-          <p className='formError'>{formState.errors.password.message}</p>
-        )}
 
         {error && <p className='formError'>{error}</p>}
         {success && <p>Logged!</p>}
+        {formState.errors.email || formState.errors.password ? (
+          <p className='formError'>Please fill in all required fields.</p>
+        ) : (
+          ''
+        )}
         <button id='signInButton' type='submit' disabled={success}>
           {success ? 'Logging in..' : 'Sign In'}
         </button>

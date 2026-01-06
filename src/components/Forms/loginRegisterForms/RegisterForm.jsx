@@ -10,7 +10,7 @@ const RegisterForm = ({ onSuccess }) => {
   const { registerUser, logIn } = useAuthContext()
   const { closeLogin } = useModalContext()
 
-  const { handleSubmit, register } = useForm({
+  const { handleSubmit, register, formState } = useForm({
     defaultValues: {
       nickName: '',
       email: '',
@@ -58,6 +58,7 @@ const RegisterForm = ({ onSuccess }) => {
           type='text'
           placeholder='Username'
           id='nickName'
+          className={formState.errors.nickName ? 'redInput' : ''}
         />
 
         <input
@@ -67,6 +68,7 @@ const RegisterForm = ({ onSuccess }) => {
           type='email'
           placeholder='Email'
           id='email'
+          className={formState.errors.email ? 'redInput' : ''}
         />
 
         <input
@@ -80,11 +82,18 @@ const RegisterForm = ({ onSuccess }) => {
           type='password'
           placeholder='Password'
           id='password'
+          className={formState.errors.password ? 'redInput' : ''}
         />
 
         {error && <p className='formError'>{error}</p>}
-
         {success && <p>Profile created!</p>}
+
+        {(formState.errors.nickName ||
+          formState.errors.email ||
+          formState.errors.password) && (
+          <p className='formError'>Please fill in all required fields.</p>
+        )}
+
         <button id='signInButton' type='submit' disabled={success}>
           {success ? 'Creating profile..' : 'Sign Up'}
         </button>

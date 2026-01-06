@@ -1,0 +1,35 @@
+#locationSelected {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 3;
+}
+#articleLocationSelected {
+  position: relative;
+  width: var(--width-standard);
+  top: 50svh;
+  padding: 5%;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 20px;
+  border-radius: 15px;
+  background-color: var(--color-bg);
+  z-index: 1;
+}
+#articleLocationSelected h2 {
+  width: 100%;
+  border-bottom: 1px solid var(--color-separator);
+  padding-bottom: 20px;
+  font-size: clamp(1rem, 3vw, var(--font-size-lg));
+}
+
+#eventsHappeningDiv {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: left;
+  gap: 20px;
+  margin-bottom: 50px;
+}

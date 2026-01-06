@@ -1,0 +1,251 @@
+#eventInputDiv {
+  border: 1px solid var(--color-lightborder-dark);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+}
+
+#eventInputDiv h3 {
+  padding: 20px;
+  cursor: pointer;
+}
+
+.createEventForm {
+  height: 1px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 20px 0 20px;
+  overflow: hidden;
+  opacity: 0;
+  transition: var(--transition-normal);
+  font-size: var(--font-size-xs);
+}
+
+.createEventForm.hiddenForm {
+  opacity: 1;
+  height: 550px;
+}
+
+.createEventForm label {
+  width: 100%;
+}
+
+.createEventForm input {
+  width: 100%;
+  height: 40px;
+  padding-left: 10px;
+  border: 0.5px solid var(--color-separator);
+  border-radius: var(--radius-xs);
+  box-sizing: border-box;
+}
+
+#eventImg,
+#eventBgImg {
+  padding: 0;
+}
+
+#formDescription {
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  padding: 10px 10px 0 0;
+  line-height: normal;
+  box-sizing: border-box;
+}
+
+#formDescription::placeholder {
+  padding-left: 10px;
+}
+
+#createEventButtonDiv {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+
+.createEventButton {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  font-weight: bold;
+  background-color: var(--color-primary);
+  color: white;
+  transition: var(--transition-fast);
+  opacity: 0.7;
+}
+
+.createEventButton:hover {
+  background-color: var(--color-primary);
+  opacity: 1;
+}
+
+.errorMessageEventDiv {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  height: 150px;
+  width: 25%;
+  position: fixed;
+  top: 38vh;
+  left: 38vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  background-color: white;
+  box-shadow: var(--shadow-md);
+  z-index: 90;
+}
+
+.errorMessageEventDiv.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+#errorMessageEventDiv #buttonDiv {
+  width: 100%;
+  display: flex;
+  align-items: start;
+  justify-content: end;
+}
+
+#errorMessageEventDiv #closeErrorWindow {
+  background-color: transparent;
+}
+
+#errorMessageEventDiv h6 {
+  height: 60%;
+  font-size: var(--font-size-xs);
+  font-weight: 400;
+}
+.formEventName {
+  width: 65%;
+}
+
+.formDate {
+  width: 30%;
+}
+
+.formCountryLocation {
+  width: 30%;
+}
+
+.formCityLocation {
+  width: 30%;
+}
+
+.formCapacity {
+  width: 30%;
+}
+
+.row_element_admin {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.row_element_admin div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row_element_admin div label,
+.row_element_admin div input,
+.row_element_admin div textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.row_element_admin:nth-child(3) div {
+  width: 45%;
+}
+
+.row_element_admin:nth-child(4) div {
+  width: 100%;
+  height: 150px;
+}
+
+input[type='file']::file-selector-button {
+  background-color: var(--color-nav);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  font-weight: bold;
+  transition: var(--transition-fast);
+  opacity: 0.5;
+}
+
+input[type='file']::file-selector-button:hover {
+  background-color: var(--color-nav);
+  opacity: 1;
+}
+
+@media (max-width: 500px) {
+  .createEventForm {
+    height: 1px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0 20px 0 20px;
+    overflow: hidden;
+    opacity: 0;
+    transition: var(--transition-normal);
+    font-size: var(--font-size-xs);
+  }
+
+  .createEventForm.hiddenForm {
+    height: auto;
+    gap: 15px;
+    padding-bottom: 20px;
+  }
+
+  #eventInputDiv h3 {
+    font-size: clamp(1rem, 6vw, var(--font-size-sm));
+  }
+
+  .row_element_admin {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .formEventName,
+  .formCityLocation,
+  .formDate,
+  .formCapacity,
+  .formCountryLocation {
+    width: 100%;
+  }
+  .formEventName label,
+  .formDate label,
+  .formCapacity label,
+  .formCityLocation label {
+    font-size: clamp(0.5rem, 2vw, var(--font-size-xs));
+  }
+
+  .formEventName input,
+  .formDate input,
+  .formCapacity input,
+  .formCityLocation input {
+    width: 100%;
+  }
+  #imagesDivCreateEvent div {
+    width: 100%;
+  }
+  #imagesDivCreateEvent div label {
+    font-size: clamp(0.5rem, 2vw, var(--font-size-xs));
+  }
+
+  .errorMessageEventDiv {
+    width: 80%;
+    left: 10vw;
+  }
+  #createEventButtonDiv {
+    justify-content: center;
+  }
+}

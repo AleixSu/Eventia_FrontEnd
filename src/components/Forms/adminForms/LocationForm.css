@@ -1,0 +1,156 @@
+#locationInputDiv {
+  border: 1px solid var(--color-lightborder-dark);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+}
+
+#locationInputDiv h3 {
+  padding: 20px;
+  cursor: pointer;
+}
+
+.createLocationForm {
+  height: 1px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0px 20px 0 20px;
+  overflow: hidden;
+  opacity: 0;
+  transition: var(--transition-normal);
+  font-size: var(--font-size-xs);
+}
+
+.createLocationForm.hiddenForm {
+  opacity: 1;
+  height: 250px;
+}
+
+.createLocationForm label {
+  width: 100%;
+}
+
+.createLocationForm input {
+  width: 100%;
+  height: 40px;
+  padding-left: 10px;
+  border: 0.5px solid var(--color-separator);
+  border-radius: var(--radius-xs);
+  box-sizing: border-box;
+}
+
+#locationImg {
+  padding: 0;
+}
+
+.locationImgForm {
+  width: 100%;
+}
+
+.locationImgForm label {
+  width: 100%;
+}
+
+.locationImgForm input {
+  width: 100%;
+}
+
+#createLocationButtonDiv {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+
+.createLocationButton {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  font-weight: bold;
+  background-color: var(--color-primary);
+  color: white;
+  transition: var(--transition-fast);
+  opacity: 0.7;
+}
+
+.createLocationButton:hover {
+  background-color: var(--color-primary);
+  opacity: 1;
+}
+
+.errorMessageDiv {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  height: 150px;
+  width: 25%;
+  position: fixed;
+  top: 38vh;
+  left: 38vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  background-color: white;
+  box-shadow: var(--shadow-md);
+  z-index: 90;
+}
+
+.errorMessageDiv.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+#errorMessageDiv #buttonDiv {
+  width: 100%;
+  display: flex;
+  align-items: start;
+  justify-content: end;
+}
+
+#errorMessageDiv #closeErrorWindow {
+  background-color: transparent;
+}
+
+#errorMessageDiv h6 {
+  height: 60%;
+  font-size: var(--font-size-xs);
+  font-weight: 400;
+}
+
+@media (max-width: 500px) {
+  #locationInputDiv h3 {
+    font-size: clamp(1rem, 6vw, var(--font-size-sm));
+  }
+
+  .createLocationForm.hiddenForm {
+    height: auto;
+    padding-bottom: 20px;
+  }
+
+  .formCountry {
+    width: 100%;
+  }
+
+  .formCountry label {
+    font-size: clamp(0.5rem, 2vw, var(--font-size-xs));
+  }
+
+  .locationImgForm {
+    width: 100%;
+  }
+
+  .locationImgForm label {
+    font-size: clamp(0.5rem, 2vw, var(--font-size-xs));
+  }
+
+  .errorMessageDiv {
+    width: 80%;
+    left: 10vw;
+  }
+  #createLocationButtonDiv {
+    justify-content: center;
+  }
+}

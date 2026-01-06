@@ -41,7 +41,7 @@ const MenuProfile = ({ isOpen, closeMenu }) => {
             My events
           </NavLink>
         </li>
-        {user?.isAdmin && (
+        {user.role === 'admin' && (
           <li>
             <NavLink to='/admin_area' onClick={closeMenu}>
               Admin area

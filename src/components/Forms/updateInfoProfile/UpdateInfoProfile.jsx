@@ -19,7 +19,7 @@ const UpdateInfoProfile = () => {
       location: user?.locationCity || '',
       email: user?.email || '',
       birthDate: user?.birthDate || '',
-      gender: user?.gender || 'Male'
+      gender: user?.gender || "Don't want to say"
     }
   })
 

@@ -70,7 +70,6 @@
 
 #articleIntro {
   position: relative;
-  height: 180svh;
   width: var(--width-standard);
   top: 50svh;
   padding: 5%;
