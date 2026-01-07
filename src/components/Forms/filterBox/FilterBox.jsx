@@ -3,6 +3,7 @@ import { API } from '../../../utils/api/api'
 import { useFilter } from '../../../context/FilterContext'
 import './FilterBox.css'
 import Button from '../../UI/button/Button'
+import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 
 const FilterBox = () => {
   const [countries, setCountries] = useState([])
@@ -35,12 +36,7 @@ const FilterBox = () => {
   }, [])
 
   if (loading)
-    return (
-      <div className='filterLoading'>
-        <div className='spinner'></div>
-        <p>Loading filter...</p>
-      </div>
-    )
+    return <LoadingIcon size={25} borderSize={2} text={'Loading filter...'} />
   if (error) return <div className='error-text'>Error: {error}</div>
 
   return (

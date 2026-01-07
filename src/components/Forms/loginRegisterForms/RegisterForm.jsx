@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useAuthContext } from '../../../context/AuthContext'
 import './RegisterForm.css'
 import { useModalContext } from '../../../context/ModalContext'
+import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 
 const RegisterForm = ({ onSuccess }) => {
   const [error, setError] = useState('')
@@ -95,12 +96,11 @@ const RegisterForm = ({ onSuccess }) => {
         )}
 
         <button id='signInButton' type='submit' disabled={loading || success}>
-          {' '}
-          Sign In
+          Sign Up
         </button>
 
         {loading ? (
-          <span className='loadingSpan'>Creating profile...</span>
+          <LoadingIcon size={25} borderSize={2} />
         ) : success ? (
           <span className='succesSpan'>Profile created!</span>
         ) : null}

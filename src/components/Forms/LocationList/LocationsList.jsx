@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import './LocationList.css'
 import { API } from '../../../utils/api/api'
 import LocationCard from '../../UI/card/locationCard/LocationCard'
+import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 
 const LocationsList = () => {
   const [locations, setLocations] = useState([])
@@ -41,10 +42,7 @@ const LocationsList = () => {
 
   if (loading) {
     return (
-      <div className='locationsLoading'>
-        <div className='spinner'></div>
-        <p>Loading locations...</p>
-      </div>
+      <LoadingIcon size={50} borderSize={4} text={'Loading locations...'} />
     )
   }
 

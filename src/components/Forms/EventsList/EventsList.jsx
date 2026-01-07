@@ -4,6 +4,7 @@ import './EventsList.css'
 import { API } from '../../../utils/api/api'
 import { useFilter } from '../../../context/FilterContext'
 import EventCard from '../../UI/card/eventCard/EventCard'
+import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 
 const EventsList = () => {
   const [events, setEvents] = useState([])
@@ -60,12 +61,7 @@ const EventsList = () => {
   )
 
   if (loading) {
-    return (
-      <div className='eventsLoading'>
-        <div className='spinner'></div>
-        <p>Loading events...</p>
-      </div>
-    )
+    return <LoadingIcon size={50} borderSize={4} text={'Loading events...'} />
   }
 
   if (error) {
