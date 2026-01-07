@@ -58,10 +58,14 @@ const EventsList = () => {
   const filteredEvents = events.filter((event) =>
     event.eventName.toLowerCase().includes(searchValue.toLowerCase())
   )
-  console.log(filteredEvents)
 
   if (loading) {
-    return <div className='loadingText'>Loading Events...</div>
+    return (
+      <div className='eventsLoading'>
+        <div className='spinner'></div>
+        <p>Loading events...</p>
+      </div>
+    )
   }
 
   if (error) {

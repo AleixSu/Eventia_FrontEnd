@@ -7,6 +7,7 @@ import { useModalContext } from '../../../context/ModalContext'
 const RegisterForm = ({ onSuccess }) => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [loading, setLoading] = useState(false)
   const { registerUser, logIn } = useAuthContext()
   const { closeLogin } = useModalContext()
 
@@ -21,28 +22,32 @@ const RegisterForm = ({ onSuccess }) => {
   const onSubmit = async (values) => {
     setError('')
     setSuccess(false)
+    setLoading(true)
 
-    const result = await registerUser(
-      values.nickName,
-      values.email,
-      values.password
-    )
+    try {
+      const result = await registerUser(
+        values.nickName,
+        values.email,
+        values.password
+      )
 
-    if (result.success) {
-      onSuccess?.()
-      const resultLogin = await logIn(values.email, values.password)
+      if (result.success) {
+        const resultLogin = await logIn(values.email, values.password)
 
-      if (resultLogin.success) {
-        setSuccess(true)
-        setTimeout(() => {
-          onSuccess?.()
-          closeLogin()
-        }, 1500)
+        if (resultLogin.success) {
+          setSuccess(true)
+          setTimeout(() => {
+            onSuccess?.()
+            closeLogin()
+          }, 1500)
+        } else {
+          setError(resultLogin.error)
+        }
       } else {
-        setError(resultLogin.error)
+        setError(result.error)
       }
-    } else {
-      setError(result.error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -73,11 +78,7 @@ const RegisterForm = ({ onSuccess }) => {
 
         <input
           {...register('password', {
-            required: 'Enter your password, please!',
-            minLength: {
-              value: 6,
-              message: 'Password must be at least 6 characters'
-            }
+            required: 'Enter your password, please!'
           })}
           type='password'
           placeholder='Password'
@@ -86,7 +87,6 @@ const RegisterForm = ({ onSuccess }) => {
         />
 
         {error && <p className='formError'>{error}</p>}
-        {success && <p>Profile created!</p>}
 
         {(formState.errors.nickName ||
           formState.errors.email ||
@@ -94,9 +94,16 @@ const RegisterForm = ({ onSuccess }) => {
           <p className='formError'>Please fill in all required fields.</p>
         )}
 
-        <button id='signInButton' type='submit' disabled={success}>
-          {success ? 'Creating profile..' : 'Sign Up'}
+        <button id='signInButton' type='submit' disabled={loading || success}>
+          {' '}
+          Sign In
         </button>
+
+        {loading ? (
+          <span className='loadingSpan'>Creating profile...</span>
+        ) : success ? (
+          <span className='succesSpan'>Profile created!</span>
+        ) : null}
       </form>
     </div>
   )

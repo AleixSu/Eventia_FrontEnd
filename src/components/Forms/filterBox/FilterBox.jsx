@@ -34,7 +34,13 @@ const FilterBox = () => {
     fetchCountries()
   }, [])
 
-  if (loading) return <div className='loading-text'>Loading filter...</div>
+  if (loading)
+    return (
+      <div className='filterLoading'>
+        <div className='spinner'></div>
+        <p>Loading filter...</p>
+      </div>
+    )
   if (error) return <div className='error-text'>Error: {error}</div>
 
   return (

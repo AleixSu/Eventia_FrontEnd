@@ -5,6 +5,14 @@
   z-index: 1;
 }
 
+.loadingSpan {
+  margin-top: 25px;
+}
+.succesSpan {
+  margin-top: 25px;
+  color: greenyellow;
+}
+
 @media (max-width: 550px) {
   #signUpButton {
     font-size: 10px;

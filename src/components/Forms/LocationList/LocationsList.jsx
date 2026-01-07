@@ -43,7 +43,7 @@ const LocationsList = () => {
     return (
       <div className='locationsLoading'>
         <div className='spinner'></div>
-        <p>Loading Locations...</p>
+        <p>Loading locations...</p>
       </div>
     )
   }

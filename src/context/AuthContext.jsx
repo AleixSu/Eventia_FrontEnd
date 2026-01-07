@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
         method: 'POST'
       })
       if (response.status !== 200) {
-        throw new Error(response.data.message || 'Ups.. Something went wrong')
+        throw new Error(response.data.message || 'Email or password incorrect!')
       }
       setUser(response.data.user)
       setToken(response.data.token)
@@ -61,8 +61,11 @@ export const AuthProvider = ({ children }) => {
         method: 'POST'
       })
       if (response.status !== 200 && response.status !== 201) {
-        throw new Error(response.data.message || 'Ups.. Something went wrong')
+        // Accede al mensaje de error desde response.data
+        const errorMessage = response.data || 'Registration failed'
+        throw new Error(errorMessage.error)
       }
+
       setUser(response.data.user)
       setToken(response.data.token)
       setIsAuthenticated(true)

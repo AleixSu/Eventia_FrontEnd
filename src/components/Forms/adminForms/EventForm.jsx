@@ -100,149 +100,142 @@ const EventForm = () => {
       <h3 id='createEventH3' onClick={() => setHiddenForm(!hiddenForm)}>
         Create New Event
       </h3>
+      <form
+        id='createEventForm'
+        className={`createEventForm ${hiddenForm ? 'hiddenForm' : ''}`}
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className='row_element_admin'>
+          <Input
+            id='eventName'
+            labelText='Event Name'
+            className='formEventName'
+            register={register}
+            errors={formState.errors}
+            required={true}
+            errorMessage={'Event Name is required!'}
+          />
+          <Input
+            id='date'
+            labelText='Event Date'
+            type='date'
+            className='formDate'
+            register={register}
+            errors={formState.errors}
+            required={true}
+            errorMessage={'Event Date is required!'}
+          />
+        </div>
 
-      {loading ? (
-        <p>Loading locations...</p>
-      ) : (
-        <form
-          id='createEventForm'
-          className={`createEventForm ${hiddenForm ? 'hiddenForm' : ''}`}
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className='row_element_admin'>
-            <Input
-              id='eventName'
-              labelText='Event Name'
-              className='formEventName'
-              register={register}
-              errors={formState.errors}
-              required={true}
-              errorMessage={'Event Name is required!'}
-            />
-            <Input
-              id='date'
-              labelText='Event Date'
-              type='date'
-              className='formDate'
-              register={register}
-              errors={formState.errors}
-              required={true}
-              errorMessage={'Event Date is required!'}
-            />
-          </div>
-
-          <div className='row_element_admin'>
-            <div className='formCountryWrapper'>
-              <label htmlFor='locationCountry'>Country</label>
-              <select
-                id='locationCountry'
-                className={
-                  formState.errors.locationCountry
-                    ? 'redInput formCountryLocation'
-                    : 'formCountryLocation'
-                }
-                {...register('locationCountry', {
-                  required: 'You have to select a country!'
-                })}
-              >
-                <option value=''>Select a country</option>
-                {locationsAvailable.map((location) => (
-                  <option key={location._id} value={location._id}>
-                    {location.country}
-                  </option>
-                ))}
-              </select>
-              {formState.errors.locationCountry && (
-                <span className='errorMessage'>
-                  {formState.errors.locationCountry.message}
-                </span>
-              )}
-            </div>
-
-            <Input
-              id='locationCity'
-              labelText='City'
-              className='formCityLocation'
-              register={register}
-              errors={formState.errors}
-              required={true}
-              errorMessage={'City is required!'}
-            />
-            <Input
-              id='maxCapacity'
-              labelText='Capacity'
-              type='number'
-              className='formCapacity'
-              register={register}
-              errors={formState.errors}
-              required={true}
-              errorMessage={'Capacity is required!'}
-            />
-          </div>
-
-          <div className='row_element_admin'>
-            <Input
-              id='eventImg'
-              labelText='Choose an image for the event'
-              type='file'
-              accept='image/*'
-              className='eventImg'
-              register={register}
-              errors={formState.errors}
-              required={true}
-              errorMessage={'An image of the event is required!'}
-            />
-            <Input
-              id='eventBgImg'
-              labelText='Choose an image for the background'
-              type='file'
-              accept='image/*'
-              className='eventBgImg'
-              register={register}
-              errors={formState.errors}
-              required={true}
-              errorMessage={
-                'An image for the background of the event is required!'
+        <div className='row_element_admin'>
+          <div className='formCountryWrapper'>
+            <label htmlFor='locationCountry'>Country</label>
+            <select
+              id='locationCountry'
+              className={
+                formState.errors.locationCountry
+                  ? 'redInput formCountryLocation'
+                  : 'formCountryLocation'
               }
-            />
+              {...register('locationCountry', {
+                required: 'You have to select a country!'
+              })}
+            >
+              <option value=''>Select a country</option>
+              {locationsAvailable.map((location) => (
+                <option key={location._id} value={location._id}>
+                  {location.country}
+                </option>
+              ))}
+            </select>
+            {formState.errors.locationCountry && (
+              <span className='errorMessage'>
+                {formState.errors.locationCountry.message}
+              </span>
+            )}
           </div>
 
-          <div className='row_element_admin'>
-            <div style={{ width: '100%' }}>
-              <label htmlFor='formDescription'>Description</label>
-              <textarea
-                {...register('description', {
-                  required: 'Description is required!'
-                })}
-                id='formDescription'
-                className={formState.errors.description ? 'redInput' : null}
-                placeholder='Write a description for the event...'
-                rows={8}
-                e
-                style={{ width: '100%' }}
-              ></textarea>
-              {formState.errors.description && (
-                <span className='errorMessage'>
-                  {formState.errors.description.message}
-                </span>
-              )}
-            </div>
-          </div>
+          <Input
+            id='locationCity'
+            labelText='City'
+            className='formCityLocation'
+            register={register}
+            errors={formState.errors}
+            required={true}
+            errorMessage={'City is required!'}
+          />
+          <Input
+            id='maxCapacity'
+            labelText='Capacity'
+            type='number'
+            className='formCapacity'
+            register={register}
+            errors={formState.errors}
+            required={true}
+            errorMessage={'Capacity is required!'}
+          />
+        </div>
 
-          {error && <p className='formError'>{error}</p>}
-          {success && (
-            <p className='formSuccess'>Event created successfully!</p>
-          )}
+        <div className='row_element_admin'>
+          <Input
+            id='eventImg'
+            labelText='Choose an image for the event'
+            type='file'
+            accept='image/*'
+            className='eventImg'
+            register={register}
+            errors={formState.errors}
+            required={true}
+            errorMessage={'An image of the event is required!'}
+          />
+          <Input
+            id='eventBgImg'
+            labelText='Choose an image for the background'
+            type='file'
+            accept='image/*'
+            className='eventBgImg'
+            register={register}
+            errors={formState.errors}
+            required={true}
+            errorMessage={
+              'An image for the background of the event is required!'
+            }
+          />
+        </div>
 
-          <div id='createEventButtonDiv'>
-            <Button
-              type='submit'
-              text='Create event'
-              className='createEventButton'
-            />
+        <div className='row_element_admin'>
+          <div style={{ width: '100%' }}>
+            <label htmlFor='formDescription'>Description</label>
+            <textarea
+              {...register('description', {
+                required: 'Description is required!'
+              })}
+              id='formDescription'
+              className={formState.errors.description ? 'redInput' : null}
+              placeholder='Write a description for the event...'
+              rows={8}
+              e
+              style={{ width: '100%' }}
+            ></textarea>
+            {formState.errors.description && (
+              <span className='errorMessage'>
+                {formState.errors.description.message}
+              </span>
+            )}
           </div>
-        </form>
-      )}
+        </div>
+
+        {error && <p className='formError'>{error}</p>}
+        {success && <p className='formSuccess'>Event created successfully!</p>}
+
+        <div id='createEventButtonDiv'>
+          <Button
+            type='submit'
+            text='Create event'
+            className='createEventButton'
+          />
+        </div>
+      </form>
     </div>
   )
 }

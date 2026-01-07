@@ -108,7 +108,7 @@
 .formError {
   position: absolute;
   width: 70%;
-  bottom: 20px;
+  bottom: 0;
   color: var(--color-text-errorMessage);
 
   display: block;
