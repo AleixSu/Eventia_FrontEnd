@@ -59,6 +59,10 @@
 .filterLocationButton.active {
   background-color: var(--color-button-pressed);
 }
+.backButton {
+  border-radius: var(--radius-xs);
+  transition: all 0.2s ease-in-out;
+}
 
 @media (max-width: 470px) {
   .registerButton {

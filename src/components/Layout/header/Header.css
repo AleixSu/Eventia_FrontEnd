@@ -9,8 +9,11 @@ header {
   width: 100%;
   z-index: 2;
 }
-header img {
-  padding: 10px;
+.logoNavLink {
+  width: 100px;
+}
+.logoNavLink img {
+  width: 90%;
 }
 
 .profileHeader {

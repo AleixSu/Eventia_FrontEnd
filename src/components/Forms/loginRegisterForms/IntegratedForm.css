@@ -134,9 +134,17 @@
 .loginRegisterArticle.rightPanelActive .overlayRight {
   transform: translateX(20%);
 }
+.successMessage {
+  align-self: end;
+  bottom: 10px;
+  position: relative;
+}
 
 .errorMessage {
   color: var(--color-text-errorMessage);
+  align-self: end;
+  bottom: 10px;
+  position: relative;
 }
 
 @media (max-width: 550px) {

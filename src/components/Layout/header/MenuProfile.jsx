@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import Button from '../../UI/button/Button'
 import { useAuthContext } from '../../../context/AuthContext'
 import './MenuProfile.css'
@@ -7,6 +7,7 @@ import './MenuProfile.css'
 const MenuProfile = ({ isOpen, closeMenu }) => {
   const { user, logOut } = useAuthContext()
   const menuRef = useRef(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!isOpen) return
@@ -26,6 +27,7 @@ const MenuProfile = ({ isOpen, closeMenu }) => {
   const handleLogOut = () => {
     logOut()
     closeMenu()
+    navigate('/')
   }
 
   return (

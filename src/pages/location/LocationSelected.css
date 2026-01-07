@@ -17,10 +17,15 @@
   background-color: var(--color-bg);
   z-index: 1;
 }
-#articleLocationSelected h2 {
+
+#locationHeader {
   width: 100%;
+  display: flex;
+  justify-content: space-between;
   border-bottom: 1px solid var(--color-separator);
   padding-bottom: 20px;
+}
+#locationHeader > h2 {
   font-size: clamp(1rem, 3vw, var(--font-size-lg));
 }
 

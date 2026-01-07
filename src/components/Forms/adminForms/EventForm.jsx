@@ -5,13 +5,14 @@ import { useForm } from 'react-hook-form'
 import { useAuthContext } from '../../../context/AuthContext'
 import { API } from '../../../utils/api/api'
 import Button from '../../UI/button/Button'
+import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 
 const EventForm = () => {
   const [error, setError] = useState('')
   const [hiddenForm, setHiddenForm] = useState(false)
   const [success, setSuccess] = useState(false)
   const [locationsAvailable, setLocationsAvailable] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const { token } = useAuthContext()
 
   const { handleSubmit, register, formState, reset } = useForm({
@@ -30,7 +31,6 @@ const EventForm = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        setLoading(true)
         const response = await API({
           endpoint: '/locations/countries'
         })
@@ -40,8 +40,6 @@ const EventForm = () => {
         }
       } catch (err) {
         console.error('Error fetching locations:', err)
-      } finally {
-        setLoading(false)
       }
     }
 
@@ -51,6 +49,7 @@ const EventForm = () => {
   const onSubmit = async (values) => {
     setError('')
     setSuccess(false)
+    setLoading(true)
 
     const formData = new FormData()
 
@@ -82,16 +81,21 @@ const EventForm = () => {
         setSuccess(true)
         reset()
         setTimeout(() => setSuccess(false), 3000)
+        setLoading(false)
       } else {
         const errorMsg =
           result.data?.error ||
           result.data?.message ||
+          result.data ||
           'Error uploading new event'
         setError(errorMsg)
+        setLoading(false)
       }
     } catch (err) {
       setError(err.message || 'Error creating event')
-      console.error(err)
+      setLoading(false)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -224,10 +228,6 @@ const EventForm = () => {
             )}
           </div>
         </div>
-
-        {error && <p className='formError'>{error}</p>}
-        {success && <p className='formSuccess'>Event created successfully!</p>}
-
         <div id='createEventButtonDiv'>
           <Button
             type='submit'
@@ -235,6 +235,18 @@ const EventForm = () => {
             className='createEventButton'
           />
         </div>
+        {loading ? (
+          <LoadingIcon
+            text={'Uploading new event..'}
+            size={25}
+            borderSize={2}
+            classList='formLoading'
+          />
+        ) : null}
+        {success && (
+          <p className='successMessage'>Event created successfully!</p>
+        )}
+        {error && <p className='errorMessage'>{error}</p>}
       </form>
     </div>
   )

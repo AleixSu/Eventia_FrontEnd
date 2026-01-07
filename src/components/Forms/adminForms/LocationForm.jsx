@@ -5,11 +5,13 @@ import { API } from '../../../utils/api/api'
 import { useForm } from 'react-hook-form'
 import Input from '../../UI/inputDOM/Input'
 import Button from '../../UI/button/Button'
+import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 
 const LocationForm = () => {
   const [error, setError] = useState('')
   const [hiddenForm, setHiddenForm] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [loading, setLoading] = useState(false)
   const { token } = useAuthContext()
 
   const { handleSubmit, register, formState, reset } = useForm({
@@ -21,6 +23,8 @@ const LocationForm = () => {
   const onSubmit = async (values) => {
     setError('')
     setSuccess(false)
+    setLoading(true)
+
     const formData = new FormData()
 
     Object.keys(values).forEach((key) => {
@@ -44,6 +48,7 @@ const LocationForm = () => {
         setSuccess(true)
         reset()
         setTimeout(() => setSuccess(false), 3000)
+        setLoading(false)
       } else {
         const errorMsg =
           result.data?.error ||
@@ -52,10 +57,13 @@ const LocationForm = () => {
           'Error uploading new location'
 
         setError(errorMsg)
+        setLoading(false)
       }
     } catch (err) {
       setError(err.message || 'Error creating location')
-      console.error(err)
+      setLoading(false)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -100,10 +108,18 @@ const LocationForm = () => {
             className='createLocationButton'
           />
         </div>
+        {loading ? (
+          <LoadingIcon
+            text={'Uploading new location..'}
+            size={25}
+            borderSize={2}
+            classList='formLoading'
+          />
+        ) : null}
         {success && (
-          <p className='success-message'>Location created successfully!</p>
+          <p className='successMessage'>Location created successfully!</p>
         )}
-        {error && <p className='error-message'>{error}</p>}
+        {error && <p className='errorMessage'>{error}</p>}
       </form>
     </div>
   )

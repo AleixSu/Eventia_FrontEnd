@@ -1,9 +1,9 @@
 import React from 'react'
 import './LoadingIcon.css'
 
-const LoadingIcon = ({ size, borderSize, text }) => {
+const LoadingIcon = ({ size, borderSize, text, classList = 'divLoading' }) => {
   return (
-    <div className='divLoading'>
+    <div className={classList}>
       <div
         className='spinner'
         style={{

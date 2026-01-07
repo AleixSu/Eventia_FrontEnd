@@ -4,6 +4,7 @@ import Banner from '../../components/Layout/banner/Banner'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { locationsSrc } from '../../constants/locationConstants'
 import EventLocationCard from '../../components/UI/card/eventCard/EventLocationCard'
+import Button from '../../components/UI/button/Button'
 
 const LocationSelected = () => {
   const location = useLocation()
@@ -22,7 +23,14 @@ const LocationSelected = () => {
         logo={locationsSrc.logoBanner}
       />
       <article id='articleLocationSelected'>
-        <h2>{locationData.country}</h2>
+        <div id='locationHeader'>
+          <h2>{locationData.country}</h2>
+          <Button
+            className={'backButton'}
+            text={'Back to Locations'}
+            fnc={() => navigate(-1)}
+          />
+        </div>
         <div id='eventsHappeningDiv'>
           {!locationData.eventList || locationData.eventList.length === 0 ? (
             <h4 id='noEvents'>¡There's no events in this location yet!</h4>

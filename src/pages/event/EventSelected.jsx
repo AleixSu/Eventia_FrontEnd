@@ -12,7 +12,6 @@ const EventSelected = () => {
   const { id } = useParams()
   const location = useLocation()
   const navigate = useNavigate()
-
   const [event, setEvent] = useState(location.state?.event || null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')

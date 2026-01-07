@@ -27,10 +27,7 @@
 #eventHeader > h2 {
   font-size: clamp(1rem, 3vw, var(--font-size-md));
 }
-.backButton {
-  border-radius: var(--radius-xs);
-  transition: all 0.2s ease-in-out;
-}
+
 .backButton:hover {
   background-color: var(--color-text-muted-dark);
 }

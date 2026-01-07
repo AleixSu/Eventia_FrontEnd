@@ -1,10 +1,13 @@
+import React from 'react'
 import Button from '../../components/UI/button/Button'
 import Card from '../../components/UI/card/homeCard/Card'
 import { homeSrc, homeText } from '../../constants/homeConstants'
 import './Home.css'
-import React from 'react'
+import { useModalContext } from '../../context/ModalContext'
 
 const Home = () => {
+  const { openLogin } = useModalContext()
+
   return (
     <main className='main'>
       <section id='home'>
@@ -68,7 +71,11 @@ const Home = () => {
             </div>
             <img src={homeSrc.logoImgMember} alt='logoImgMember' />
           </div>
-          <Button text={'Register Now'} className={'registerButton'} />
+          <Button
+            text={'Register Now'}
+            className={'registerButton'}
+            fnc={openLogin}
+          />
         </article>
       </section>
     </main>

@@ -23,10 +23,12 @@ const Header = () => {
 
   return (
     <header>
-      <img src='/images/lightLogo.png' alt='logoImg' />
+      <NavLink to='' className={'logoNavLink'}>
+        <img src='/images/lightLogo.png' alt='logoImg' />
+      </NavLink>
       <nav>
         <div id='burgerMenu' onClick={() => setIsUlActive(!isUlActive)}>
-          <img src={headerSrc.burgerMenuImg} alt='burgerMenu' />
+          <img src={headerSrc.burgerMenuImg} alt='burgerMenu' />{' '}
         </div>
         <ul id='headerUl' className={isUlActive ? 'active' : null}>
           <li>
