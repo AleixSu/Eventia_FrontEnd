@@ -122,6 +122,30 @@
   width: 100%;
   margin-bottom: 10px;
 }
+.formPassword label {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.formPassword {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--font-size-xs);
+  width: 45%;
+}
+.formRole label {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.formRole {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--font-size-xs);
+  width: 45%;
+}
 
 #profileImgDiv {
   width: 100%;
@@ -168,13 +192,31 @@
   background-color: var(--color-nav);
   opacity: 1;
 }
-
-#saveButtonDiv {
+#endForm {
   width: 100%;
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
+  align-items: center;
 }
-#saveChangesButton {
+
+#formMessagesDiv {
+  width: 40%;
+  display: flex;
+  justify-content: start;
+}
+#loadingIconDiv {
+  position: relative;
+  top: -12px;
+  right: -140px;
+}
+#saveButtonDiv {
+  width: 40%;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+.saveChangesButton {
+  width: 60%;
   background-color: var(--color-primary);
   color: white;
   padding: 10px 20px;
@@ -186,11 +228,21 @@
   opacity: 0.7;
   justify-content: end;
 }
-#saveChangesButton:hover {
+.saveChangesButton:hover {
   background-color: var(--color-primary);
   opacity: 1;
 }
 
+.errorMessageProfile {
+  width: 100%;
+  text-align: justify;
+  color: var(--color-text-errorMessage);
+  font-size: var(--font-size-xs);
+}
+.successMessageProfile {
+  font-size: var(--font-size-xs);
+  width: 65%;
+}
 @media (max-width: 500px) {
   .row_element {
     display: flex;

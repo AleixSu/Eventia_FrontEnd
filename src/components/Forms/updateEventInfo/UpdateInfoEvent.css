@@ -1,0 +1,179 @@
+#modifyInputDiv {
+  width: 100%;
+}
+#modifyH3 {
+  font-size: var(--font-size-md);
+  border-bottom: 1px solid var(--color-separator);
+  padding: 20px;
+  margin-bottom: 50px;
+  cursor: pointer;
+}
+
+.modifyForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 20px 0 20px;
+  font-size: var(--font-size-xs);
+  gap: 20px;
+}
+
+.modifyForm label {
+  width: 100%;
+}
+
+.modifyForm input {
+  width: 100%;
+  height: 40px;
+  padding-left: 10px;
+  border: 0.5px solid var(--color-separator);
+  border-radius: var(--radius-xs);
+  box-sizing: border-box;
+}
+.modifyForm input:focus {
+  outline: none;
+}
+
+#modifyImg,
+#modifyBgImg {
+  display: flex;
+}
+
+#imgFormDiv {
+  width: 40%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+}
+
+#imgFormDiv img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+#formDescription {
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  padding: 10px 10px 0 0;
+  line-height: normal;
+  box-sizing: border-box;
+}
+
+#formDescription::placeholder {
+  padding-left: 10px;
+}
+
+#modifyButtonDiv {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+
+.modifyButton {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  font-weight: bold;
+  background-color: var(--color-primary);
+  color: white;
+  transition: var(--transition-fast);
+  opacity: 0.7;
+}
+
+.modifyButton:hover {
+  background-color: var(--color-primary);
+  opacity: 1;
+}
+
+.errorMessageDiv {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  height: 150px;
+  width: 25%;
+  position: fixed;
+  top: 38vh;
+  left: 38vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  background-color: white;
+  box-shadow: var(--shadow-md);
+  z-index: 90;
+}
+
+.row_element_modify_event {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.row_element_modify_event div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row_element_modify_event div label,
+.row_element_modify_event div input,
+.row_element_modify_event div textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 500px) {
+  .modifyForm {
+    height: 1px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0 20px 0 20px;
+    overflow: hidden;
+    transition: var(--transition-normal);
+    font-size: var(--font-size-xs);
+  }
+
+  .modifyForm.hiddenForm {
+    height: auto;
+    gap: 15px;
+    padding-bottom: 20px;
+  }
+
+  #modifyH3 {
+    font-size: clamp(1rem, 6vw, var(--font-size-sm));
+  }
+
+  .row_element_admin {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .formEventName,
+  .formCityLocation,
+  .formDate,
+  .formCapacity,
+  .formCountryLocation {
+    width: 100%;
+  }
+  .formEventName label,
+  .formDate label,
+  .formCapacity label,
+  .formCityLocation label {
+    font-size: clamp(0.5rem, 2vw, var(--font-size-xs));
+  }
+
+  .formEventName input,
+  .formDate input,
+  .formCapacity input,
+  .formCityLocation input {
+    width: 100%;
+  }
+  #modifyButtonDiv {
+    justify-content: center;
+  }
+}

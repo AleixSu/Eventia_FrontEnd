@@ -15,6 +15,8 @@ import AdminArea from './pages/adminArea/AdminArea.jsx'
 import EventSelected from './pages/event/EventSelected.jsx'
 import LocationSelected from './pages/location/LocationSelected.jsx'
 import MyEvents from './pages/myProfile/MyEvents.jsx'
+import EditUser from './pages/adminArea/EditUser.jsx'
+import EditEvent from './pages/adminArea/EditEvent.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -38,6 +40,14 @@ createRoot(document.getElementById('root')).render(
                 <Route path='/profile' element={<MyProfile />}></Route>
                 <Route path='/my_events' element={<MyEvents />}></Route>
                 <Route path='/admin_area' element={<AdminArea />}></Route>
+                <Route
+                  path='/admin_area/edit_user/:id'
+                  element={<EditUser />}
+                ></Route>
+                <Route
+                  path='/admin_area/edit_event/:id'
+                  element={<EditEvent />}
+                ></Route>
                 <Route path='*' element={<RouteNotFound />}></Route>
               </Route>
             </Routes>

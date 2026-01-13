@@ -7,11 +7,11 @@ import Input from '../../UI/inputDOM/Input'
 import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 
-const UpdateInfoProfile = () => {
+const UpdateInfoUser = ({ user }) => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { user, token } = useAuthContext()
+  const { token } = useAuthContext()
 
   const { handleSubmit, register, formState } = useForm({
     defaultValues: {
@@ -24,7 +24,8 @@ const UpdateInfoProfile = () => {
       birthDate: user?.birthDate || '',
       password: '',
       newPassword: '',
-      gender: user?.gender || "Don't want to say"
+      gender: user?.gender || "Don't want to say",
+      role: user?.role || ''
     }
   })
 
@@ -32,6 +33,7 @@ const UpdateInfoProfile = () => {
     setError('')
     setLoading(true)
     setSuccess(false)
+
     try {
       const formData = new FormData()
 
@@ -82,7 +84,7 @@ const UpdateInfoProfile = () => {
   return (
     <form id='updateInfoForm' onSubmit={handleSubmit(onSubmit)}>
       <div id='accountHeader'>
-        <h3>Personal information</h3>
+        <h3>Edit User Info</h3>
       </div>
       <div id='accountMain'>
         <div id='accountInfo'>
@@ -179,6 +181,16 @@ const UpdateInfoProfile = () => {
               errors={formState.errors}
             />
           </div>
+          <div className='row_element'>
+            {' '}
+            <Input
+              id={'role'}
+              labelText={'Acces level'}
+              className='formRole'
+              register={register}
+              errors={formState.errors}
+            />{' '}
+          </div>
         </div>
       </div>
       <div id='profileImgDiv'>
@@ -195,6 +207,7 @@ const UpdateInfoProfile = () => {
           errors={formState.errors}
         />
       </div>
+
       <div id='endForm'>
         <div id='formMessagesDiv'>
           {success && (
@@ -217,4 +230,4 @@ const UpdateInfoProfile = () => {
   )
 }
 
-export default UpdateInfoProfile
+export default UpdateInfoUser
