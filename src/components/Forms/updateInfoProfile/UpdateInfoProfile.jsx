@@ -6,12 +6,15 @@ import { useAuthContext } from '../../../context/AuthContext'
 import Input from '../../UI/inputDOM/Input'
 import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
+import { useNavigate } from 'react-router-dom'
 
 const UpdateInfoProfile = () => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { user, token } = useAuthContext()
+  const [deleteButton, setDeleteButton] = useState(false)
+  const { user, token, logOut } = useAuthContext()
+  const navigate = useNavigate()
 
   const { handleSubmit, register, formState } = useForm({
     defaultValues: {
@@ -21,7 +24,9 @@ const UpdateInfoProfile = () => {
       nickName: user?.nickName || '',
       location: user?.location || '',
       email: user?.email || '',
-      birthDate: user?.birthDate || '',
+      birthDate: user?.birthDate
+        ? new Date(user.birthDate).toISOString().split('T')[0]
+        : '',
       password: '',
       newPassword: '',
       gender: user?.gender || "Don't want to say"
@@ -74,7 +79,31 @@ const UpdateInfoProfile = () => {
       setLoading(false)
     }
   }
+  const handleDeleteAccount = async () => {
+    setError('')
+    setLoading(true)
+    setSuccess(false)
 
+    try {
+      const result = await API({
+        endpoint: `/users/${user._id}`,
+        method: 'DELETE',
+        token: token
+      })
+
+      if (result.status === 200) {
+        setSuccess(true)
+        logOut()
+        navigate('/')
+      } else {
+        setError(result.data || 'Error updating profile')
+      }
+    } catch (error) {
+      setError(error.message || 'Error deleting profile')
+    } finally {
+      setLoading(false)
+    }
+  }
   if (!user) {
     return <div>Loading...</div>
   }
@@ -83,6 +112,12 @@ const UpdateInfoProfile = () => {
     <form id='updateInfoForm' onSubmit={handleSubmit(onSubmit)}>
       <div id='accountHeader'>
         <h3>Personal information</h3>
+        <Button
+          className={'backButton'}
+          type={'button'}
+          text={'Go Back'}
+          fnc={() => navigate(-1)}
+        />
       </div>
       <div id='accountMain'>
         <div id='accountInfo'>
@@ -211,10 +246,32 @@ const UpdateInfoProfile = () => {
             text={'Save Changes'}
             className={'saveChangesButton'}
           />
+          <Button
+            type={'button'}
+            text={'Delete Account'}
+            className={'deleteAccountButton'}
+            fnc={() => setDeleteButton(true)}
+          />
+          {deleteButton ? (
+            <div className='deleteConfirmation'>
+              <h3>¿Are you sure you want to delete this account?</h3>
+              <div>
+                <Button
+                  type={'button'}
+                  fnc={() => handleDeleteAccount()}
+                  text={'Yes'}
+                />{' '}
+                <Button
+                  type={'button'}
+                  fnc={() => setDeleteButton(false)}
+                  text={'No'}
+                />
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </form>
   )
 }
-
 export default UpdateInfoProfile

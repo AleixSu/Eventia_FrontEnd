@@ -14,6 +14,22 @@
   font-size: clamp(1rem, 6vw, var(--font-size-md));
   width: 100%;
 }
+.backButton {
+  width: 20%;
+  background-color: var(--color-nav);
+  color: var(--color-bg);
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  font-weight: bold;
+  transition: var(--transition-fast);
+  opacity: 0.7;
+  justify-content: end;
+}
+.backButton:hover {
+  opacity: 1;
+}
 
 #accountInfo {
   padding-top: 30px;
@@ -212,13 +228,15 @@
 #saveButtonDiv {
   width: 40%;
   display: flex;
+  flex-direction: column;
   justify-content: end;
   align-items: center;
+  gap: 20px;
 }
 .saveChangesButton {
   width: 60%;
   background-color: var(--color-primary);
-  color: white;
+  color: var(--color-bg);
   padding: 10px 20px;
   border: none;
   border-radius: var(--radius-xs);
@@ -229,7 +247,6 @@
   justify-content: end;
 }
 .saveChangesButton:hover {
-  background-color: var(--color-primary);
   opacity: 1;
 }
 
@@ -243,6 +260,56 @@
   font-size: var(--font-size-xs);
   width: 65%;
 }
+
+.deleteConfirmation {
+  background-color: var(--color-red-alert);
+  position: fixed;
+  top: 50%;
+  left: 37%;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  border-radius: var(--radius-xs);
+  z-index: 3;
+}
+.deleteConfirmation h3 {
+  color: var(--color-bg);
+}
+.deleteConfirmation div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.deleteConfirmation button {
+  border-radius: var(--radius-xs);
+  width: 20%;
+  transition: var(--transition-fast);
+}
+.deleteConfirmation button:hover {
+  opacity: 0.8;
+}
+
+.deleteAccountButton {
+  width: 60%;
+  background-color: var(--color-red-alert);
+  color: var(--color-bg);
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  font-weight: bold;
+  transition: var(--transition-fast);
+  opacity: 0.7;
+  justify-content: end;
+}
+.deleteAccountButton:hover {
+  opacity: 1;
+}
+
 @media (max-width: 500px) {
   .row_element {
     display: flex;

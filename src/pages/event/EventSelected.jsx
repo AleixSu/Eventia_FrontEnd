@@ -7,6 +7,7 @@ import './EventSelected.css'
 import AttendeeCard from '../../components/UI/card/attendeeCard/AttendeeCard'
 import Button from '../../components/UI/button/Button'
 import { useAuthContext } from '../../context/AuthContext'
+import LoadingIcon from '../../components/UI/loadingIcon/LoadingIcon'
 
 const EventSelected = () => {
   const { id } = useParams()
@@ -14,7 +15,9 @@ const EventSelected = () => {
   const navigate = useNavigate()
   const [event, setEvent] = useState(location.state?.event || null)
   const [loading, setLoading] = useState(true)
+  const [attending, setAttending] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
   const { user, token } = useAuthContext()
 
   useEffect(() => {
@@ -53,6 +56,7 @@ const EventSelected = () => {
   }, [id])
 
   const handleAssistButton = async () => {
+    setAttending(true)
     try {
       const result = await API({
         endpoint: `/events/${event._id}/sign_up`,
@@ -62,11 +66,18 @@ const EventSelected = () => {
 
       if (result.status === 200) {
         setEvent(result.data.event)
+        setAttending(false)
+        setSuccess(true)
+        setTimeout(() => {
+          setSuccess(false)
+        }, 2000)
       } else {
+        setAttending(false)
         console.error('Error applying to event', result.data)
         setError(result.data?.error || 'Error joining event')
       }
     } catch (err) {
+      setAttending(false)
       console.error('Error:', err)
       setError('Error joining event')
     }
@@ -98,6 +109,17 @@ const EventSelected = () => {
           <img src={event.eventImg} alt='Event Img' />
           <div id='eventDescriptionDiv'>
             <p>{event.description}</p>
+            {attending ? (
+              <div id='loadingEventDiv'>
+                {' '}
+                <LoadingIcon size={25} borderSize={2} />
+              </div>
+            ) : null}
+            {success ? (
+              <div className='confirmationEventText'>
+                <p>¡You’re in! Your spot at the event is confirmed.</p>
+              </div>
+            ) : null}
             {user ? (
               <Button
                 className={'assistButton'}

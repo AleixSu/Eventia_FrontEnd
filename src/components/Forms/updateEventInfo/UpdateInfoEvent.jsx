@@ -6,14 +6,16 @@ import { useAuthContext } from '../../../context/AuthContext'
 import { API } from '../../../utils/api/api'
 import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
+import { useNavigate } from 'react-router-dom'
 
 const UpdateInfoEvent = ({ event }) => {
   const [error, setError] = useState('')
-  const [hiddenForm, setHiddenForm] = useState(false)
   const [success, setSuccess] = useState(false)
   const [locationsAvailable, setLocationsAvailable] = useState([])
+  const [deleteButton, setDeleteButton] = useState(false)
   const [loading, setLoading] = useState(false)
   const { token } = useAuthContext()
+  const navigate = useNavigate()
 
   const { handleSubmit, register, formState, reset } = useForm({
     defaultValues: {
@@ -97,10 +99,44 @@ const UpdateInfoEvent = ({ event }) => {
       setLoading(false)
     }
   }
+  const handleDeleteEvent = async () => {
+    setError('')
+    setLoading(true)
+    setSuccess(false)
+
+    try {
+      const result = await API({
+        endpoint: `/events/${event._id}`,
+        method: 'DELETE',
+        token: token
+      })
+
+      if (result.status === 200) {
+        setSuccess(true)
+        setTimeout(() => {
+          navigate(-1)
+        }, 1000)
+      } else {
+        setError(result.data || 'Error updating profile')
+      }
+    } catch (error) {
+      setError(error.message || 'Error deleting profile')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div id='modifyInputDiv'>
-      <h3 id='modifyH3'>Modify Event</h3>
+      <div id='headerModifyEvent'>
+        <h3 id='modifyH3'>Modify Event</h3>
+        <Button
+          className={'backButtonModify'}
+          type={'button'}
+          text={'Go Back'}
+          fnc={() => navigate(-1)}
+        />
+      </div>
       <form
         id='modifyForm'
         className={`modifyForm`}
@@ -211,22 +247,59 @@ const UpdateInfoEvent = ({ event }) => {
             required={true}
           />
         </div>
-
-        <div id='modifyButtonDiv'>
-          <Button type='submit' text='Modify event' className='modifyButton' />
+        <div id='endFormEvent'>
+          <div id='formMessagesDivEvent'>
+            {success && (
+              <p className='successMessage'>
+                {' '}
+                {deleteButton
+                  ? 'Event deleted successfully!'
+                  : 'Event modified successfully!'}
+              </p>
+            )}
+            {error && <p className='errorMessage'>{error}</p>}
+          </div>
+          <div id='loadingIconDivEvent'>
+            {loading ? (
+              <LoadingIcon
+                text={deleteButton ? 'Deleting event' : 'Uploading new event..'}
+                size={25}
+                borderSize={2}
+                classList='formLoading'
+              />
+            ) : null}
+          </div>
+          <div id='modifyButtonDiv'>
+            <Button
+              type='submit'
+              text='Modify event'
+              className='modifyButton'
+            />
+            <Button
+              type={'button'}
+              text={'Delete Event'}
+              className={'deleteAccountButtonEvent'}
+              fnc={() => setDeleteButton(true)}
+            />
+            {deleteButton ? (
+              <div className='deleteConfirmation'>
+                <h3>¿Are you sure you want to delete this event?</h3>
+                <div>
+                  <Button
+                    type={'button'}
+                    fnc={() => handleDeleteEvent()}
+                    text={'Yes'}
+                  />{' '}
+                  <Button
+                    type={'button'}
+                    fnc={() => setDeleteButton(false)}
+                    text={'No'}
+                  />
+                </div>
+              </div>
+            ) : null}
+          </div>
         </div>
-        {loading ? (
-          <LoadingIcon
-            text={'Uploading new event..'}
-            size={25}
-            borderSize={2}
-            classList='formLoading'
-          />
-        ) : null}
-        {success && (
-          <p className='successMessage'>Event modified successfully!</p>
-        )}
-        {error && <p className='errorMessage'>{error}</p>}
       </form>
     </div>
   )

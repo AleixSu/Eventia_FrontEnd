@@ -1,12 +1,36 @@
 #modifyInputDiv {
   width: 100%;
 }
+#headerModifyEvent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50px;
+  border-bottom: 1px solid var(--color-separator);
+  gap: 0;
+}
+
 #modifyH3 {
   font-size: var(--font-size-md);
-  border-bottom: 1px solid var(--color-separator);
   padding: 20px;
-  margin-bottom: 50px;
+  width: 100%;
+}
+.backButtonModify {
+  width: 20%;
+  height: 50%;
+  background-color: var(--color-nav);
+  color: var(--color-bg);
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-xs);
   cursor: pointer;
+  font-weight: bold;
+  transition: var(--transition-fast);
+  opacity: 0.7;
+  justify-content: end;
+}
+.backButtonModify:hover {
+  opacity: 1;
 }
 
 .modifyForm {
@@ -64,30 +88,6 @@
   padding-left: 10px;
 }
 
-#modifyButtonDiv {
-  width: 100%;
-  display: flex;
-  justify-content: end;
-}
-
-.modifyButton {
-  margin-bottom: 20px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: var(--radius-xs);
-  cursor: pointer;
-  font-weight: bold;
-  background-color: var(--color-primary);
-  color: white;
-  transition: var(--transition-fast);
-  opacity: 0.7;
-}
-
-.modifyButton:hover {
-  background-color: var(--color-primary);
-  opacity: 1;
-}
-
 .errorMessageDiv {
   opacity: 0;
   visibility: hidden;
@@ -124,6 +124,85 @@
 .row_element_modify_event div textarea {
   width: 100%;
   box-sizing: border-box;
+}
+#endFormEvent {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#modifyButtonDiv {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: end;
+  gap: 20px;
+}
+#modifyButtonDiv button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--color-bg);
+  transition: var(--transition-fast);
+  opacity: 0.7;
+}
+#modifyButtonDiv button:hover {
+  opacity: 1;
+}
+
+.modifyButton {
+  background-color: var(--color-primary);
+}
+
+.deleteAccountButtonEvent {
+  background-color: var(--color-red-alert);
+}
+
+#formMessagesDivEvent {
+  width: 100%;
+  position: relative;
+  top: 60px;
+}
+#loadingIconDivEvent {
+  position: relative;
+  width: 100%;
+}
+.deleteConfirmation {
+  background-color: var(--color-red-alert);
+  position: fixed;
+  top: 50%;
+  left: 37%;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  border-radius: var(--radius-xs);
+  z-index: 3;
+}
+.deleteConfirmation h3 {
+  color: var(--color-bg);
+}
+.deleteConfirmation div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.deleteConfirmation button {
+  border-radius: var(--radius-xs);
+  width: 20%;
+  transition: var(--transition-fast);
+}
+.deleteConfirmation button:hover {
+  opacity: 0.8;
 }
 
 @media (max-width: 500px) {

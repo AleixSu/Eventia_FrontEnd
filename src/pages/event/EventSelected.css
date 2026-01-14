@@ -51,7 +51,7 @@
   justify-content: space-between;
   text-align: justify;
 }
-#eventDescriptionDiv p {
+#eventDescriptionDiv > p {
   font-size: clamp(0.5rem, 2vw, var(--font-size-sm));
 }
 
@@ -70,6 +70,21 @@
 .assistButton:hover {
   background-color: var(--color-primary);
   opacity: 0.7;
+}
+#loadingEventDiv {
+  position: relative;
+  top: 45px;
+  right: -120px;
+}
+.confirmationEventText {
+  position: relative;
+  top: 40px;
+  right: -40px;
+  z-index: 3;
+  border-radius: var(--radius-sm);
+}
+.confirmationEventText > p {
+  font-size: 15px;
 }
 
 #attendeesListDiv {
