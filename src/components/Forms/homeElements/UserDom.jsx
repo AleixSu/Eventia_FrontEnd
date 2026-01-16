@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import EventCard from '../../UI/card/eventCard/EventCard'
 import { homeSrc, homeText } from '../../../constants/homeConstants'
 import './UserDom.css'
 import HomeEventCard from '../../UI/card/homeEventCard/HomeEventCard'

@@ -6,7 +6,7 @@ import './Home.css'
 import { useModalContext } from '../../context/ModalContext'
 import { useAuthContext } from '../../context/AuthContext'
 import { API } from '../../utils/api/api'
-import NoUserDOM from '../../components/Forms/homeElements/noUserDOM'
+import NoUserDOM from '../../components/Forms/homeElements/NoUserDOM'
 import UserDom from '../../components/Forms/homeElements/UserDom'
 
 const Home = () => {
