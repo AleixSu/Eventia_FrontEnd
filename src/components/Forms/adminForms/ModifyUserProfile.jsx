@@ -90,22 +90,29 @@ const ModifyUserProfile = () => {
             errorMessage={'Email is Required'}
           />
         </div>
-        <div id='modifyUserButtonDiv'>
-          <Button
-            type='submit'
-            text='Get user profile'
-            className='modifyUserButton'
-          />
+        <div id='endFormModifyUser'>
+          <div id='loadingIconModifyUserDiv'>
+            {' '}
+            {loading ? (
+              <LoadingIcon
+                text={'Getting user info...'}
+                size={25}
+                borderSize={2}
+                classList='formLoading'
+              />
+            ) : null}
+          </div>
+          <div id='messagesModifyUserDiv'>
+            {error && <p className='errorMessage'>{error}</p>}
+          </div>
+          <div id='modifyUserButtonDiv'>
+            <Button
+              type='submit'
+              text='Get user profile'
+              className='modifyUserButton'
+            />
+          </div>
         </div>
-        {loading ? (
-          <LoadingIcon
-            text={'Getting user info...'}
-            size={25}
-            borderSize={2}
-            classList='formLoading'
-          />
-        ) : null}
-        {error && <p className='errorMessage'>{error}</p>}
       </form>
     </div>
   )

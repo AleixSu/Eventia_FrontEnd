@@ -18,15 +18,39 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    const storedToken = localStorage.getItem('token')
+    const initializeAuth = async () => {
+      const storedToken = localStorage.getItem('token')
+      const storedUserId = localStorage.getItem('userId')
 
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser))
-      setToken(storedToken)
-      setIsAuthenticated(true)
+      if (storedToken && storedUserId) {
+        setToken(storedToken)
+
+        try {
+          const result = await API({
+            endpoint: `/users/${storedUserId}`,
+            method: 'GET',
+            token: storedToken
+          })
+
+          if (result.status === 200) {
+            setUser(result.data)
+            setIsAuthenticated(true)
+          } else {
+            localStorage.removeItem('token')
+            localStorage.removeItem('userId')
+            setToken(null)
+          }
+        } catch (error) {
+          console.error('Error fetching user:', error)
+          localStorage.removeItem('token')
+          localStorage.removeItem('userId')
+          setToken(null)
+        }
+      }
+      setLoading(false)
     }
-    setLoading(false)
+
+    initializeAuth()
   }, [])
 
   const logIn = async (email, password) => {
@@ -43,8 +67,9 @@ export const AuthProvider = ({ children }) => {
       setUser(response.data.user)
       setToken(response.data.token)
       setIsAuthenticated(true)
-      localStorage.setItem('user', JSON.stringify(response.data.user))
       localStorage.setItem('token', response.data.token)
+      localStorage.setItem('userId', response.data.user._id)
+      window.scrollTo(0, 0)
 
       return { success: true }
     } catch (error) {
@@ -61,7 +86,6 @@ export const AuthProvider = ({ children }) => {
         method: 'POST'
       })
       if (response.status !== 200 && response.status !== 201) {
-        // Accede al mensaje de error desde response.data
         const errorMessage = response.data || 'Registration failed'
         throw new Error(errorMessage.error)
       }
@@ -69,20 +93,27 @@ export const AuthProvider = ({ children }) => {
       setUser(response.data.user)
       setToken(response.data.token)
       setIsAuthenticated(true)
-      localStorage.setItem('user', JSON.stringify(response.data.user))
       localStorage.setItem('token', response.data.token)
+      localStorage.setItem('userId', response.data.user._id)
+      window.scrollTo(0, 0)
+
       return { success: true }
     } catch (error) {
       return { success: false, error: error.message }
     }
   }
 
+  const updateUser = (updatedUserData) => {
+    setUser(updatedUserData)
+  }
+
   const logOut = () => {
     setUser(null)
     setToken(null)
     setIsAuthenticated(false)
-    localStorage.removeItem('user')
     localStorage.removeItem('token')
+    localStorage.removeItem('userId')
+    window.scrollTo(0, 0)
   }
 
   return (
@@ -94,7 +125,8 @@ export const AuthProvider = ({ children }) => {
         loading,
         logIn,
         registerUser,
-        logOut
+        logOut,
+        updateUser
       }}
     >
       {children}

@@ -55,8 +55,14 @@
   width: 100%;
 }
 
+#endFormModifyUser {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 15px;
+}
+
 #modifyUserButtonDiv {
-  width: 100%;
   display: flex;
   justify-content: end;
 }

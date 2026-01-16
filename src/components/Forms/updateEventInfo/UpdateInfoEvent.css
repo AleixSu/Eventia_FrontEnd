@@ -62,6 +62,11 @@
 #modifyBgImg {
   display: flex;
 }
+.modifyImgDiv,
+.modifyBgImgDiv {
+  display: flex;
+  width: 50%;
+}
 
 #imgFormDiv {
   width: 40%;
@@ -128,14 +133,13 @@
 #endFormEvent {
   width: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  justify-content: end;
   align-items: center;
+  gap: 15px;
 }
 
 #modifyButtonDiv {
-  width: 100%;
-
+  width: 15%;
   display: flex;
   flex-direction: column;
   justify-content: end;
@@ -143,6 +147,7 @@
   gap: 20px;
 }
 #modifyButtonDiv button {
+  width: 100%;
   padding: 10px 20px;
   border: none;
   border-radius: var(--radius-xs);
@@ -160,49 +165,8 @@
   background-color: var(--color-primary);
 }
 
-.deleteAccountButtonEvent {
+.deleteEventButton {
   background-color: var(--color-red-alert);
-}
-
-#formMessagesDivEvent {
-  width: 100%;
-  position: relative;
-  top: 60px;
-}
-#loadingIconDivEvent {
-  position: relative;
-  width: 100%;
-}
-.deleteConfirmation {
-  background-color: var(--color-red-alert);
-  position: fixed;
-  top: 50%;
-  left: 37%;
-  padding: 30px 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-  border-radius: var(--radius-xs);
-  z-index: 3;
-}
-.deleteConfirmation h3 {
-  color: var(--color-bg);
-}
-.deleteConfirmation div {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-}
-.deleteConfirmation button {
-  border-radius: var(--radius-xs);
-  width: 20%;
-  transition: var(--transition-fast);
-}
-.deleteConfirmation button:hover {
-  opacity: 0.8;
 }
 
 @media (max-width: 500px) {

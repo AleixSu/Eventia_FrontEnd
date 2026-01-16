@@ -1,36 +1,35 @@
-#locationInputDiv {
-  border: 1px solid var(--color-lightborder-dark);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-md);
-}
-
-#locationInputDiv h3 {
-  padding: 20px;
-  cursor: pointer;
-}
-
-.createLocationForm {
-  height: 1px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 0px 20px 0 20px;
-  overflow: hidden;
-  opacity: 0;
-  transition: var(--transition-normal);
-  font-size: var(--font-size-xs);
-}
-
-.createLocationForm.hiddenForm {
-  opacity: 1;
-  height: 250px;
-}
-
-.createLocationForm label {
+#modifyLocationDiv {
   width: 100%;
 }
 
-.createLocationForm input {
+#headerModifyLocation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50px;
+  border-bottom: 1px solid var(--color-separator);
+  gap: 0;
+}
+#modifyLocationH3 {
+  font-size: var(--font-size-md);
+  padding: 20px;
+  width: 100%;
+}
+
+.modifyLocationFormDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 20px 0 20px;
+  font-size: var(--font-size-xs);
+  gap: 20px;
+}
+
+.modifyLocationFormDiv label {
+  width: 100%;
+}
+
+.modifyLocationFormDiv input {
   width: 100%;
   height: 40px;
   padding-left: 10px;
@@ -39,23 +38,29 @@
   box-sizing: border-box;
 }
 
-.createLocationForm input:focus {
+.modifyLocationFormDiv input:focus {
   outline: none;
 }
-
+#locationImgInput {
+  display: flex;
+}
+.locationModifyImgForm {
+  display: flex;
+  width: 50%;
+}
 #locationImg {
   padding: 0;
 }
 
-.locationImgForm {
+.locationModifyImgForm {
   width: 100%;
 }
 
-.locationImgForm label {
+.locationModifyImgForm label {
   width: 100%;
 }
 
-.locationImgForm input {
+.locationModifyImgForm input {
   width: 100%;
 }
 
@@ -99,34 +104,43 @@
   font-size: var(--font-size-xs);
   font-weight: 400;
 }
-#endFormLocation {
+#endFormModifyLocation {
+  width: 100%;
   display: flex;
   justify-content: end;
   align-items: center;
   gap: 15px;
 }
 
-#createLocationButtonDiv {
+#modifyLocationButtonFormDiv {
+  width: 18%;
   display: flex;
+  flex-direction: column;
   justify-content: end;
+  align-items: end;
+  gap: 20px;
 }
 
-.createLocationButton {
-  margin-bottom: 20px;
+#modifyLocationButtonFormDiv button {
+  width: 100%;
   padding: 10px 20px;
   border: none;
   border-radius: var(--radius-xs);
   cursor: pointer;
   font-weight: bold;
-  background-color: var(--color-primary);
-  color: white;
+  color: var(--color-bg);
   transition: var(--transition-fast);
   opacity: 0.7;
 }
-
-.createLocationButton:hover {
-  background-color: var(--color-primary);
+#modifyLocationButtonFormDiv button:hover {
   opacity: 1;
+}
+.modifyLocationButtonForm {
+  background-color: var(--color-primary);
+}
+
+.deleteLocationButton {
+  background-color: var(--color-red-alert);
 }
 
 @media (max-width: 500px) {
@@ -134,7 +148,7 @@
     font-size: clamp(1rem, 6vw, var(--font-size-sm));
   }
 
-  .createLocationForm.hiddenForm {
+  .modifyLocationFormDiv.hiddenForm {
     height: auto;
     padding-bottom: 20px;
   }
@@ -147,11 +161,11 @@
     font-size: clamp(0.5rem, 2vw, var(--font-size-xs));
   }
 
-  .locationImgForm {
+  .locationModifyImgForm {
     width: 100%;
   }
 
-  .locationImgForm label {
+  .locationModifyImgForm label {
     font-size: clamp(0.5rem, 2vw, var(--font-size-xs));
   }
 
@@ -159,7 +173,7 @@
     width: 80%;
     left: 10vw;
   }
-  #createLocationButtonDiv {
+  #modifyLocationButtonDiv {
     justify-content: center;
   }
 }

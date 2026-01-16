@@ -32,6 +32,7 @@
 
 .logOutOption {
   background-color: transparent;
+  color: var(--color-profileMenu-query);
   width: 100%;
   text-align: end;
   border-radius: 0;
@@ -40,7 +41,7 @@
 }
 
 .logOutOption:hover {
-  color: var(--color-button-pressed);
+  color: var(--color-bg);
 }
 
 @media (max-width: 500px) {

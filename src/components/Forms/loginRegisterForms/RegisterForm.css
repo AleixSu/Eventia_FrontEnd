@@ -9,6 +9,33 @@
   margin-top: 25px;
 }
 
+.passwordRequirements {
+  position: absolute;
+  bottom: 5px;
+  width: 90%;
+  padding: 5px;
+  border-radius: var(--radius-xs);
+  background-color: var(--color-surface);
+  transition: var(--transition-fast);
+}
+.passwordRequirements li {
+  font-size: 12px;
+  text-align: start;
+  width: 100%;
+}
+.passwordRequirements li.valid {
+  color: green;
+}
+.passwordRequirements li.invalid {
+  color: var(--color-text);
+}
+.hiddenRequirements {
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+  transform: translateX(20px);
+}
+
 @media (max-width: 550px) {
   #signUpButton {
     font-size: 10px;

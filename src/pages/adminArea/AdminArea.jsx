@@ -5,6 +5,7 @@ import LocationForm from '../../components/Forms/adminForms/LocationForm'
 import EventForm from '../../components/Forms/adminForms/EventForm'
 import ModifyUserProfile from '../../components/Forms/adminForms/ModifyUserProfile'
 import ModifyEvent from '../../components/Forms/adminForms/ModifyEvent'
+import ModifyLocation from '../../components/Forms/adminForms/ModifyLocation'
 
 const AdminArea = () => {
   return (
@@ -22,6 +23,7 @@ const AdminArea = () => {
             <EventForm />
             <ModifyUserProfile />
             <ModifyEvent />
+            <ModifyLocation />
           </div>
         </div>
       </article>

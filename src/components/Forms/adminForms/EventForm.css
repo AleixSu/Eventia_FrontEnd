@@ -63,8 +63,14 @@
   padding-left: 10px;
 }
 
+#endFormCreateEvent {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 15px;
+}
+
 #createEventButtonDiv {
-  width: 100%;
   display: flex;
   justify-content: end;
 }

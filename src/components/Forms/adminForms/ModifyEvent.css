@@ -47,8 +47,14 @@
   width: 50%;
 }
 
+#endFormModifyEvent {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 15px;
+}
+
 #modifyEventButtonDiv {
-  width: 100%;
   display: flex;
   justify-content: end;
 }

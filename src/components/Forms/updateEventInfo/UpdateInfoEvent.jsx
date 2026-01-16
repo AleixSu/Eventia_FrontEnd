@@ -9,19 +9,20 @@ import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 import { useNavigate } from 'react-router-dom'
 
 const UpdateInfoEvent = ({ event }) => {
-  const [error, setError] = useState('')
+  const [error, setError] = useState('d')
   const [success, setSuccess] = useState(false)
   const [locationsAvailable, setLocationsAvailable] = useState([])
   const [deleteButton, setDeleteButton] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [currentEvent, setCurrentEvent] = useState(event)
   const { token } = useAuthContext()
   const navigate = useNavigate()
 
-  const { handleSubmit, register, formState, reset } = useForm({
+  const { handleSubmit, register, formState, reset, setValue } = useForm({
     defaultValues: {
       eventName: event?.eventName || '',
       date: event?.date ? new Date(event.date).toISOString().split('T')[0] : '',
-      locationCountry: '',
+      locationCountry: event?.locationCountry?._id || '',
       locationCity: event?.locationCity || '',
       maxCapacity: event?.maxCapacity || '',
       description: event?.description || '',
@@ -29,6 +30,19 @@ const UpdateInfoEvent = ({ event }) => {
       eventBgImg: null
     }
   })
+
+  useEffect(() => {
+    setCurrentEvent(event)
+    setValue('eventName', event?.eventName || '')
+    setValue(
+      'date',
+      event?.date ? new Date(event.date).toISOString().split('T')[0] : ''
+    )
+    setValue('locationCountry', event?.locationCountry?._id || '')
+    setValue('locationCity', event?.locationCity || '')
+    setValue('maxCapacity', event?.maxCapacity || '')
+    setValue('description', event?.description || '')
+  }, [event, setValue])
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -47,6 +61,7 @@ const UpdateInfoEvent = ({ event }) => {
 
     fetchLocations()
   }, [])
+
   const onSubmit = async (values) => {
     setError('')
     setSuccess(false)
@@ -83,7 +98,19 @@ const UpdateInfoEvent = ({ event }) => {
 
       if (result.status === 200 || result.status === 201) {
         setSuccess(true)
-        reset()
+        setCurrentEvent(result.data)
+        setValue('eventName', result.data.eventName)
+        setValue(
+          'date',
+          result.data.date
+            ? new Date(result.data.date).toISOString().split('T')[0]
+            : ''
+        )
+        setValue('locationCountry', result.data.locationCountry?._id || '')
+        setValue('locationCity', result.data.locationCity)
+        setValue('maxCapacity', result.data.maxCapacity)
+        setValue('description', result.data.description)
+
         setTimeout(() => setSuccess(false), 3000)
       } else {
         const errorMsg =
@@ -99,6 +126,7 @@ const UpdateInfoEvent = ({ event }) => {
       setLoading(false)
     }
   }
+
   const handleDeleteEvent = async () => {
     setError('')
     setLoading(true)
@@ -117,10 +145,10 @@ const UpdateInfoEvent = ({ event }) => {
           navigate(-1)
         }, 1000)
       } else {
-        setError(result.data || 'Error updating profile')
+        setError(result.data || 'Error deleting event')
       }
     } catch (error) {
-      setError(error.message || 'Error deleting profile')
+      setError(error.message || 'Error deleting event')
     } finally {
       setLoading(false)
     }
@@ -208,7 +236,6 @@ const UpdateInfoEvent = ({ event }) => {
               className={formState.errors.description ? 'redInput' : null}
               placeholder='Write a description for the event...'
               rows={8}
-              e
               style={{ width: '100%' }}
             ></textarea>
             {formState.errors.description && (
@@ -220,44 +247,57 @@ const UpdateInfoEvent = ({ event }) => {
         </div>
         <div className='row_element_modify_event'>
           <div id='imgFormDiv'>
-            <img id='imgEvent' src={event.eventImg} alt={event.eventName} />
+            <img
+              id='imgEvent'
+              src={currentEvent?.eventImg}
+              alt={currentEvent?.eventName}
+            />
           </div>
           <Input
-            id='modifyImg'
-            labelText='Choose an image for the event'
+            id='eventImg'
+            labelText='Choose an image for the event (jpg, png, jpeg, gif, webp)'
             type='file'
             accept='image/*'
-            className='modifyImg'
+            className='modifyImgDiv'
             register={register}
             errors={formState.errors}
           />
         </div>
         <div className='row_element_modify_event'>
           <div id='imgFormDiv'>
-            <img id='imgBgEvent' src={event.eventBgImg} alt={event.eventName} />
+            <img
+              id='imgBgEvent'
+              src={currentEvent?.eventBgImg}
+              alt={currentEvent?.eventName}
+            />
           </div>
           <Input
-            id='modifyBgImg'
-            labelText='Choose an image for the background'
+            id='eventBgImg'
+            labelText='Choose an image for the background (jpg, png, jpeg, gif, webp)'
             type='file'
             accept='image/*'
-            className='modifyBgImg'
+            className='modifyBgImgDiv'
             register={register}
             errors={formState.errors}
-            required={true}
           />
         </div>
         <div id='endFormEvent'>
           <div id='formMessagesDivEvent'>
             {success && (
               <p className='successMessage'>
-                {' '}
                 {deleteButton
                   ? 'Event deleted successfully!'
                   : 'Event modified successfully!'}
               </p>
             )}
-            {error && <p className='errorMessage'>{error}</p>}
+            {error && (
+              <p className='errorMessage'>
+                {error ===
+                `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`
+                  ? 'Only the specified image formats are allowed.'
+                  : error}
+              </p>
+            )}
           </div>
           <div id='loadingIconDivEvent'>
             {loading ? (
@@ -278,25 +318,15 @@ const UpdateInfoEvent = ({ event }) => {
             <Button
               type={'button'}
               text={'Delete Event'}
-              className={'deleteAccountButtonEvent'}
+              className={'deleteEventButton'}
               fnc={() => setDeleteButton(true)}
             />
             {deleteButton ? (
-              <div className='deleteConfirmation'>
-                <h3>¿Are you sure you want to delete this event?</h3>
-                <div>
-                  <Button
-                    type={'button'}
-                    fnc={() => handleDeleteEvent()}
-                    text={'Yes'}
-                  />{' '}
-                  <Button
-                    type={'button'}
-                    fnc={() => setDeleteButton(false)}
-                    text={'No'}
-                  />
-                </div>
-              </div>
+              <DeleteMessage
+                elementToErase={'event'}
+                yesFnc={() => handleDeleteEvent()}
+                noFnc={() => setDeleteButton(false)}
+              />
             ) : null}
           </div>
         </div>

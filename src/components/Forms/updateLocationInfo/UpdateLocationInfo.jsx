@@ -1,24 +1,34 @@
-import React, { useState } from 'react'
-import './LocationForm.css'
+import React, { useEffect, useState } from 'react'
 import { useAuthContext } from '../../../context/AuthContext'
-import { API } from '../../../utils/api/api'
 import { useForm } from 'react-hook-form'
 import Input from '../../UI/inputDOM/Input'
 import Button from '../../UI/button/Button'
+import DeleteMessage from '../../UI/deleteMessage/DeleteMessage'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
+import './UpdateLocationInfo.css'
+import { useNavigate } from 'react-router-dom'
+import { API } from '../../../utils/api/api'
 
-const LocationForm = () => {
+const UpdateLocationInfo = ({ location }) => {
   const [error, setError] = useState('')
-  const [hiddenForm, setHiddenForm] = useState(false)
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [deleteButton, setDeleteButton] = useState(false)
+  const [currentLocation, setCurrentLocation] = useState(location)
   const { token } = useAuthContext()
+  const navigate = useNavigate()
 
-  const { handleSubmit, register, formState, reset } = useForm({
+  const { handleSubmit, register, formState, setValue } = useForm({
     defaultValues: {
-      country: ''
+      country: location?.country || ''
     }
   })
+
+  useEffect(() => {
+    setCurrentLocation(location)
+
+    setValue('country', location?.country || '')
+  }, [location, setValue])
 
   const onSubmit = async (values) => {
     setError('')
@@ -37,16 +47,17 @@ const LocationForm = () => {
 
     try {
       const result = await API({
-        endpoint: '/locations/',
+        endpoint: `/locations/${location._id}`,
         body: formData,
-        method: 'POST',
+        method: 'PATCH',
         isJSON: false,
         token: token
       })
 
       if (result.status === 201 || result.status === 200) {
         setSuccess(true)
-        reset()
+        setCurrentLocation(result.data)
+        setValue('country', result.data.country)
         setTimeout(() => setSuccess(false), 3000)
         setLoading(false)
       } else {
@@ -67,14 +78,47 @@ const LocationForm = () => {
     }
   }
 
+  const handleDeleteLocation = async () => {
+    setError('')
+    setLoading(true)
+    setSuccess(false)
+
+    try {
+      const result = await API({
+        endpoint: `/locations/${location._id}`,
+        method: 'DELETE',
+        token: token
+      })
+
+      if (result.status === 200) {
+        setSuccess(true)
+        setTimeout(() => {
+          navigate(-1)
+        }, 1000)
+      } else {
+        setError(result.data || 'Error deleting location')
+      }
+    } catch (error) {
+      setError(error.message || 'Error deleting location')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
-    <div id='locationInputDiv'>
-      <h3 id='createLocationH3' onClick={() => setHiddenForm(!hiddenForm)}>
-        Create New Location
-      </h3>
+    <div id='modifyLocationDiv'>
+      <div id='headerModifyLocation'>
+        <h3 id='modifyLocationH3'>Modify Location</h3>
+        <Button
+          className={'backButtonModify'}
+          type={'button'}
+          text={'Go Back'}
+          fnc={() => navigate(-1)}
+        />
+      </div>
       <form
-        id='createLocationForm'
-        className={`createLocationForm ${hiddenForm ? 'hiddenForm' : ''}`}
+        id='modifyLocationFormDiv'
+        className={`modifyLocationFormDiv`}
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className='row_element_admin'>
@@ -89,20 +133,25 @@ const LocationForm = () => {
           />
         </div>
         <div className='row_element_admin'>
+          <div id='imgFormDiv'>
+            <img
+              id='imgLocation'
+              src={currentLocation?.locationImg}
+              alt={currentLocation?.country}
+            />
+          </div>
           <Input
             id='locationImgInput'
             labelText='Choose an image for the location (jpg, png, jpeg, gif, webp)'
             type='file'
-            className='locationImgForm'
+            className='locationModifyImgForm'
             register={register}
-            required={true}
             errors={formState.errors}
-            errorMessage={'You have to choose an Image for the location!'}
             accept='image/*'
           />
         </div>
-        <div id='endFormLocation'>
-          <div id='loadingIconLocationDiv'>
+        <div id='endFormModifyLocation'>
+          <div id='loadingIconModifyLocationDiv'>
             {loading ? (
               <LoadingIcon
                 text={'Uploading new location..'}
@@ -112,9 +161,9 @@ const LocationForm = () => {
               />
             ) : null}
           </div>
-          <div id='messagesLocationDiv'>
+          <div id='messagesModifyLocationDiv'>
             {success && (
-              <p className='successMessage'>Location created successfully!</p>
+              <p className='successMessage'>Location modified successfully!</p>
             )}
             {error && (
               <p className='errorMessage'>
@@ -125,12 +174,26 @@ const LocationForm = () => {
               </p>
             )}
           </div>
-          <div id='createLocationButtonDiv'>
+          <div id='modifyLocationButtonFormDiv'>
             <Button
               type='submit'
-              text='Create location'
-              className='createLocationButton'
+              text='Modify location'
+              className='modifyLocationButtonForm'
             />
+
+            <Button
+              type={'button'}
+              text={'Delete Event'}
+              className={'deleteLocationButton'}
+              fnc={() => setDeleteButton(true)}
+            />
+            {deleteButton ? (
+              <DeleteMessage
+                elementToErase={'location'}
+                yesFnc={() => handleDeleteLocation()}
+                noFnc={() => setDeleteButton(false)}
+              />
+            ) : null}
           </div>
         </div>
       </form>
@@ -138,4 +201,4 @@ const LocationForm = () => {
   )
 }
 
-export default LocationForm
+export default UpdateLocationInfo

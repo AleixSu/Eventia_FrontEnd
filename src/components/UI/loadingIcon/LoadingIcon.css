@@ -1,7 +1,7 @@
 .divLoading {
   width: 100%;
+  height: 100%;
   display: flex;
-  margin-top: 25px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -11,8 +11,6 @@
 .formLoading {
   width: 100%;
   display: flex;
-  position: relative;
-  top: -10px;
   justify-content: end;
   align-items: center;
   gap: 1rem;

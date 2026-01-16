@@ -1,12 +1,39 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '../../components/UI/button/Button'
 import Card from '../../components/UI/card/homeCard/Card'
 import { homeSrc, homeText } from '../../constants/homeConstants'
 import './Home.css'
 import { useModalContext } from '../../context/ModalContext'
+import { useAuthContext } from '../../context/AuthContext'
+import { API } from '../../utils/api/api'
+import NoUserDOM from '../../components/Forms/homeElements/noUserDOM'
+import UserDom from '../../components/Forms/homeElements/UserDom'
 
 const Home = () => {
   const { openLogin } = useModalContext()
+  const { user } = useAuthContext()
+  const [randomEvents, setRandomEvents] = useState([])
+  const [numberOfEvents, setNumberOfEvents] = useState('')
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      if (user) {
+        const result = await API({
+          endpoint: '/events',
+          method: 'GET'
+        })
+
+        let threeRandomEvents = []
+        for (let i = 0; i < 3; i++) {
+          const index = Math.floor(Math.random() * result.data.length)
+          threeRandomEvents.push(result.data[index])
+        }
+        setNumberOfEvents(result.data.length)
+        setRandomEvents(threeRandomEvents)
+      }
+    }
+    fetchEvents()
+  }, [user])
 
   return (
     <main className='main'>
@@ -53,29 +80,11 @@ const Home = () => {
           <div id='eventiaText'>
             <p>{homeText.introText} </p>
           </div>
-          <div id='joinUs'>
-            <h5>{homeText.joinUsTextBlack1}</h5>
-            <h5 className='keyWord'>{homeText.joinUsTextColour}</h5>
-            <h5>{homeText.joinUsTextBlack2}</h5>
-          </div>
-          <div id='memberDiv'>
-            <div id='benefitsDiv'>
-              <h6>{homeText.benefitsTitle}</h6>
-              <ul>
-                {homeText.userBenefits.map((benefit, index) => (
-                  <li key={index}>
-                    <p>{benefit}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <img src={homeSrc.logoImgMember} alt='logoImgMember' />
-          </div>
-          <Button
-            text={'Register Now'}
-            className={'registerButton'}
-            fnc={openLogin}
-          />
+          {user ? (
+            <UserDom events={randomEvents} eventsNumber={numberOfEvents} />
+          ) : (
+            <NoUserDOM fnc={openLogin} />
+          )}
         </article>
       </section>
     </main>

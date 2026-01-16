@@ -106,7 +106,7 @@
   padding: 0px 11%;
 }
 
-#joinUs {
+#joinUs-wellcome {
   width: var(--width-standard);
   margin: 50px 0px;
   display: flex;
@@ -115,7 +115,7 @@
   gap: 10px;
 }
 
-#joinUs h5 {
+#joinUs-wellcome h5 {
   font-size: clamp(0.8rem, 4vw, var(--font-size-lg));
   text-align: center;
 }

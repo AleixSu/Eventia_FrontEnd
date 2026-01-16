@@ -183,7 +183,7 @@ const EventForm = () => {
         <div className='row_element_admin'>
           <Input
             id='eventImg'
-            labelText='Choose an image for the event'
+            labelText='Choose an image for the event (jpg, png, jpeg, gif, webp)'
             type='file'
             accept='image/*'
             className='eventImg'
@@ -194,7 +194,7 @@ const EventForm = () => {
           />
           <Input
             id='eventBgImg'
-            labelText='Choose an image for the background'
+            labelText='Choose an image for the background (jpg, png, jpeg, gif, webp)'
             type='file'
             accept='image/*'
             className='eventBgImg'
@@ -228,25 +228,40 @@ const EventForm = () => {
             )}
           </div>
         </div>
-        <div id='createEventButtonDiv'>
-          <Button
-            type='submit'
-            text='Create event'
-            className='createEventButton'
-          />
+        <div id='endFormCreateEvent'>
+          {' '}
+          <div id='loadingIconEventDiv'>
+            {' '}
+            {loading ? (
+              <LoadingIcon
+                text={'Uploading new event..'}
+                size={25}
+                borderSize={2}
+                classList='formLoading'
+              />
+            ) : null}
+          </div>
+          <div id='messagesEventDiv'>
+            {success && (
+              <p className='successMessage'>Event created successfully!</p>
+            )}
+            {error && (
+              <p className='errorMessage'>
+                {error ===
+                `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`
+                  ? 'Only the specified image formats are allowed.'
+                  : error}
+              </p>
+            )}
+          </div>
+          <div id='createEventButtonDiv'>
+            <Button
+              type='submit'
+              text='Create event'
+              className='createEventButton'
+            />
+          </div>
         </div>
-        {loading ? (
-          <LoadingIcon
-            text={'Uploading new event..'}
-            size={25}
-            borderSize={2}
-            classList='formLoading'
-          />
-        ) : null}
-        {success && (
-          <p className='successMessage'>Event created successfully!</p>
-        )}
-        {error && <p className='errorMessage'>{error}</p>}
       </form>
     </div>
   )

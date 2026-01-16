@@ -1,0 +1,82 @@
+#userDomDiv {
+  width: 80%;
+  margin-top: 50px;
+  background-color: var(--color-nav);
+  border-radius: var(--radius-md);
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#wellcome {
+  width: var(--width-standard);
+  margin: 50px 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+#wellcome h5 {
+  font-size: clamp(0.8rem, 4vw, var(--font-size-lg));
+  text-align: center;
+  color: var(--color-bg);
+}
+#browseDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#browseDiv p {
+  color: var(--color-bg);
+  text-align: center;
+}
+#browseDiv h5 {
+  font-size: clamp(0.8rem, 4vw, var(--font-size-md));
+  color: var(--color-bg);
+  margin-top: 25px;
+}
+#homeLoadingDiv {
+  margin-top: 25px;
+}
+#browseDiv > ul {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin-top: 70px;
+  gap: 20px;
+}
+#browseDiv li {
+  width: 80%;
+}
+#browseDiv > img {
+  margin-top: 25px;
+  width: 25%;
+}
+.exploreSection {
+  text-align: center;
+  margin: 4rem 0;
+}
+
+.exploreTitle {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.exploreLink {
+  font-size: 2rem;
+  font-weight: 300;
+  color: white;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.exploreLink:hover {
+  color: #fbbf24;
+  transform: scale(1.02);
+}

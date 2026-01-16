@@ -17,6 +17,8 @@ import LocationSelected from './pages/location/LocationSelected.jsx'
 import MyEvents from './pages/myProfile/MyEvents.jsx'
 import EditUser from './pages/adminArea/EditUser.jsx'
 import EditEvent from './pages/adminArea/EditEvent.jsx'
+import EditLocation from './pages/adminArea/EditLocation.jsx'
+import ScrollToTop from './utils/globalFnc/ScrollToTop.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -24,6 +26,7 @@ createRoot(document.getElementById('root')).render(
       <ModalProvider>
         <FilterProvider>
           <BrowserRouter>
+            <ScrollToTop />
             <Routes>
               <Route path='/' element={<App />}>
                 <Route index element={<Home />}></Route>
@@ -47,6 +50,10 @@ createRoot(document.getElementById('root')).render(
                 <Route
                   path='/admin_area/edit_event/:id'
                   element={<EditEvent />}
+                ></Route>
+                <Route
+                  path='/admin_area/edit_location/:id'
+                  element={<EditLocation />}
                 ></Route>
                 <Route path='*' element={<RouteNotFound />}></Route>
               </Route>

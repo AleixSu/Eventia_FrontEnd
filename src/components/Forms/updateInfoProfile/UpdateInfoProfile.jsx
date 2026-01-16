@@ -13,7 +13,7 @@ const UpdateInfoProfile = () => {
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const [deleteButton, setDeleteButton] = useState(false)
-  const { user, token, logOut } = useAuthContext()
+  const { user, token, logOut, updateUser } = useAuthContext()
   const navigate = useNavigate()
 
   const { handleSubmit, register, formState } = useForm({
@@ -37,12 +37,14 @@ const UpdateInfoProfile = () => {
     setError('')
     setLoading(true)
     setSuccess(false)
+
     try {
       const formData = new FormData()
 
       if (values.newPassword || values.password) {
         if (values.newPassword !== values.password) {
           setError('Passwords do not match')
+          setLoading(false)
           return
         }
         if (values.password) {
@@ -70,15 +72,17 @@ const UpdateInfoProfile = () => {
 
       if (result.status === 200) {
         setSuccess(true)
+        updateUser(result.data.user || result.data)
       } else {
         setError(result.data || 'Error updating profile')
       }
     } catch (error) {
-      setError(result.data || 'Error updating profile')
+      setError(error.message || 'Error updating profile')
     } finally {
       setLoading(false)
     }
   }
+
   const handleDeleteAccount = async () => {
     setError('')
     setLoading(true)
@@ -94,9 +98,9 @@ const UpdateInfoProfile = () => {
       if (result.status === 200) {
         setSuccess(true)
         logOut()
-        navigate('/')
+        navigate(-1)
       } else {
-        setError(result.data || 'Error updating profile')
+        setError(result.data || 'Error deleting profile')
       }
     } catch (error) {
       setError(error.message || 'Error deleting profile')
@@ -104,6 +108,7 @@ const UpdateInfoProfile = () => {
       setLoading(false)
     }
   }
+
   if (!user) {
     return <div>Loading...</div>
   }
@@ -223,7 +228,7 @@ const UpdateInfoProfile = () => {
         />
         <Input
           id='profileImgInput'
-          labelText='Change profile picture'
+          labelText='Change profile picture (jpg, png, jpeg, gif, webp)'
           type='file'
           accept='image/*'
           register={register}
@@ -235,7 +240,14 @@ const UpdateInfoProfile = () => {
           {success && (
             <p className='successMessageProfile'>Changes saved successfully!</p>
           )}
-          {error && <p className='errorMessageProfile'>{error}</p>}
+          {error && (
+            <p className='errorMessageProfile'>
+              {error ===
+              `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`
+                ? 'Only the specified image formats are allowed.'
+                : error}
+            </p>
+          )}
         </div>
         <div id='loadingIconDiv'>
           {loading ? <LoadingIcon size={25} borderSize={2} /> : null}
@@ -253,21 +265,11 @@ const UpdateInfoProfile = () => {
             fnc={() => setDeleteButton(true)}
           />
           {deleteButton ? (
-            <div className='deleteConfirmation'>
-              <h3>¿Are you sure you want to delete this account?</h3>
-              <div>
-                <Button
-                  type={'button'}
-                  fnc={() => handleDeleteAccount()}
-                  text={'Yes'}
-                />{' '}
-                <Button
-                  type={'button'}
-                  fnc={() => setDeleteButton(false)}
-                  text={'No'}
-                />
-              </div>
-            </div>
+            <DeleteMessage
+              elementToErase={'profile'}
+              yesFnc={() => handleDeleteAccount()}
+              noFnc={() => setDeleteButton(false)}
+            />
           ) : null}
         </div>
       </div>

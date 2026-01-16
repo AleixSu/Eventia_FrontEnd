@@ -1,0 +1,32 @@
+.deleteConfirmation {
+  background-color: var(--color-surface-dark);
+  position: fixed;
+  top: 50%;
+  left: 37%;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  border-radius: var(--radius-xs);
+  z-index: 3;
+}
+.deleteConfirmation h3 {
+  color: var(--color-bg);
+}
+.deleteConfirmation div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+#deleteConfirmationButtonDiv button {
+  border-radius: var(--radius-xs);
+  width: 20%;
+  transition: var(--transition-fast);
+  color: var(--color-text);
+}
+.deleteConfirmation button:hover {
+  opacity: 0.8;
+}

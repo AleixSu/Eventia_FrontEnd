@@ -18,7 +18,17 @@ const EventSelected = () => {
   const [attending, setAttending] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [imGoing, setImGoing] = useState(false)
   const { user, token } = useAuthContext()
+
+  useEffect(() => {
+    if (event && user && event.attendees) {
+      const isAttending = event.attendees.some(
+        (attendee) => attendee._id === user._id
+      )
+      setImGoing(isAttending)
+    }
+  }, [event, user])
 
   useEffect(() => {
     if (
@@ -57,9 +67,14 @@ const EventSelected = () => {
 
   const handleAssistButton = async () => {
     setAttending(true)
+    setError('')
     try {
+      const endpoint = imGoing
+        ? `/events/${event._id}/unsign_up`
+        : `/events/${event._id}/sign_up`
+
       const result = await API({
-        endpoint: `/events/${event._id}/sign_up`,
+        endpoint: endpoint,
         method: 'PATCH',
         token: token
       })
@@ -70,21 +85,21 @@ const EventSelected = () => {
         setSuccess(true)
         setTimeout(() => {
           setSuccess(false)
-        }, 2000)
+        }, 3000)
       } else {
         setAttending(false)
-        console.error('Error applying to event', result.data)
-        setError(result.data?.error || 'Error joining event')
+        console.error('Error with event attendance', result.data)
+        setError(result.data?.error || 'Error updating attendance')
       }
     } catch (err) {
       setAttending(false)
       console.error('Error:', err)
-      setError('Error joining event')
+      setError('Error updating attendance')
     }
   }
 
   if (loading) return <div className='loading'>Loading event...</div>
-  if (error) return <div className='error'>{error}</div>
+  if (error && !event) return <div className='error'>{error}</div>
   if (!event) return <div>Event not found</div>
 
   let numeration = 1
@@ -109,24 +124,31 @@ const EventSelected = () => {
           <img src={event.eventImg} alt='Event Img' />
           <div id='eventDescriptionDiv'>
             <p>{event.description}</p>
-            {attending ? (
-              <div id='loadingEventDiv'>
-                {' '}
-                <LoadingIcon size={25} borderSize={2} />
-              </div>
-            ) : null}
-            {success ? (
-              <div className='confirmationEventText'>
-                <p>¡You’re in! Your spot at the event is confirmed.</p>
-              </div>
-            ) : null}
-            {user ? (
-              <Button
-                className={'assistButton'}
-                text={"I'm Going!"}
-                fnc={handleAssistButton}
-              />
-            ) : null}
+            <div id='buttonMessagesDiv'>
+              {attending ? (
+                <div id='loadingEventDiv'>
+                  {' '}
+                  <LoadingIcon size={25} borderSize={2} />
+                </div>
+              ) : null}
+              {success ? (
+                <div className='confirmationEventText'>
+                  <p>
+                    {imGoing
+                      ? "¡You're in! Your spot at the event is confirmed."
+                      : "You've cancelled your attendance."}
+                  </p>
+                </div>
+              ) : null}
+              {error && <p className='errorMessage'>{error}</p>}
+              {user ? (
+                <Button
+                  className={imGoing ? 'cancelButton' : 'assistButton'}
+                  text={imGoing ? "I've changed my mind.." : "I'm Going!"}
+                  fnc={handleAssistButton}
+                />
+              ) : null}
+            </div>
           </div>
         </div>
         <div id='attendeesListDiv'>
