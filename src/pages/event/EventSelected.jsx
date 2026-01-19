@@ -8,6 +8,7 @@ import AttendeeCard from '../../components/UI/card/attendeeCard/AttendeeCard'
 import Button from '../../components/UI/button/Button'
 import { useAuthContext } from '../../context/AuthContext'
 import LoadingIcon from '../../components/UI/loadingIcon/LoadingIcon'
+import AttendeesList from '../../components/Forms/eventComponents/attendeesList/AttendeesList'
 
 const EventSelected = () => {
   const { id } = useParams()
@@ -152,10 +153,10 @@ const EventSelected = () => {
           </div>
         </div>
         <div id='attendeesListDiv'>
-          <h2>Attendee's List:{!user ? '' : event.attendees?.length || 0}</h2>
-          <div id='attendeesList'>
-            {user ? (
-              !event.attendees || event.attendees.length === 0 ? (
+          {user ? (
+            <AttendeesList event={event} />
+          ) : (
+            /*               !event.attendees || event.attendees.length === 0 ? (
                 <h4 id='beTheFirst'>
                   ¡Come on, be the first to confirm your attendance to this
                   event!
@@ -171,14 +172,15 @@ const EventSelected = () => {
                     </li>
                   ))}
                 </ul>
-              )
-            ) : (
+              ) */
+            <>
+              <h2>Who's going:</h2>
               <h4 id='registerNote'>
-                ¡Register or login to be able to assist the event and watch the
-                attendee's list!
+                ¡Register or login to be able to assist the event and watch
+                who's going!
               </h4>
-            )}
-          </div>
+            </>
+          )}
         </div>
       </article>
     </section>

@@ -10,7 +10,7 @@
 }
 :root {
   /* ======= COLORS (Light Mode) ======= */
-  --color-bg: #f8f6f2; /* blanco cálido, no puro */
+  --color-bg: #f8f6f2;
   --color-surface: #ffffff;
   --color-text: #222222;
   --color-text-muted: #666666;

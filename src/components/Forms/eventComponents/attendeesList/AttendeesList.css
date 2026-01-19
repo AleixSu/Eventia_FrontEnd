@@ -1,0 +1,265 @@
+#attendeesListUser {
+  padding: 2rem;
+  background: linear-gradient(180deg, var(--color-nav) 0%, #030407 100%);
+  border-radius: 1rem;
+}
+.attendeesListTitle {
+  width: 100%;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--color-bg);
+  margin-bottom: 1.5rem;
+}
+
+#exampleSection {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+#exampleSection p {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.exampleAttendees {
+  display: flex;
+  width: 100%;
+}
+
+.exampleAttendeesImgDiv img {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+#attendeesCount {
+  display: flex;
+  align-items: center;
+  font-size: 1.25rem;
+  color: var(--color-bg);
+  font-weight: 600;
+  margin-left: 10px;
+}
+
+#attendeesCount > p {
+  width: 100%;
+}
+
+#eventStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  background: rgb(7, 7, 7);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat {
+  text-align: center;
+}
+
+.statNumber {
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.statNumber.attending {
+  color: var(--color-keyWord-terciary);
+}
+
+.statNumber.capacity {
+  color: var(--color-primary);
+}
+
+.statNumber.spotsLeft {
+  color: #10b981;
+}
+
+.statLabel {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+#viewAllButtonDiv {
+  display: flex;
+  justify-content: center;
+}
+.viewAllButton {
+  width: 40%;
+  margin: 1.5rem 0;
+  background: linear-gradient(
+    to right,
+    var(--color-keyWord-terciary),
+    var(--color-primary)
+  );
+  color: var(--color-bg);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.viewAllButton:hover {
+  opacity: 0.7;
+}
+.viewNoneButton {
+  width: 40%;
+  margin: 1.5rem 0;
+  background-color: var(--color-nav);
+  color: var(--color-bg);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.viewNoneButton:hover {
+  opacity: 0.7;
+}
+
+.searchContainer {
+  margin-bottom: 50;
+  margin-bottom: 50px;
+}
+
+.searchInputAttendees {
+  width: 100%;
+  height: 50px;
+  background-color: rgb(7, 7, 7);
+  color: white;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #374151;
+  transition: border-color 0.3s ease;
+}
+
+.searchInputAttendees:focus {
+  border-color: var(--color-keyWord-terciary);
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: var(--color-bg);
+}
+
+.attendeesRoll {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 24rem;
+  overflow-y: auto;
+}
+
+.attendeesRoll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.attendeesRoll::-webkit-scrollbar-track {
+  background: rgb(7, 7, 7);
+  border-radius: 4px;
+}
+
+.attendeesRoll::-webkit-scrollbar-thumb {
+  background: var(--color-nav);
+  border-radius: 4px;
+}
+
+.attendeesRoll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-nav);
+}
+
+.attendeeItem {
+  height: 55px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: rgba(7, 7, 7, 0.541);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.attendeeNumber {
+  color: #6b7280;
+  font-weight: 600;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.attendeeAvatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.attendeeName {
+  color: var(--color-bg);
+  font-size: 1rem;
+}
+
+.noResults p {
+  color: var(--color-bg);
+}
+
+@media (max-width: 768px) {
+  .attendeesRoll {
+    max-height: 20rem;
+  }
+  #attendeesList {
+    padding: 1.5rem;
+  }
+
+  .eventStats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .exampleAttendees {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-width: 3px;
+  }
+
+  .attendeesCount {
+    font-size: 1rem;
+  }
+
+  .statNumber {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #exampleSection {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .attendeeItem {
+    padding: 0.5rem;
+  }
+
+  .attendeeAvatar {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .attendeeName {
+    font-size: 0.875rem;
+  }
+}
