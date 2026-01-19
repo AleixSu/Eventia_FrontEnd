@@ -89,12 +89,14 @@ export const AuthProvider = ({ children }) => {
         const errorMessage = response.data || 'Registration failed'
         throw new Error(errorMessage.error)
       }
+      console.log(response.data)
 
       setUser(response.data.user)
+      console.log(user)
       setToken(response.data.token)
       setIsAuthenticated(true)
       localStorage.setItem('token', response.data.token)
-      localStorage.setItem('userId', response.data.user._id)
+      localStorage.setItem('userId', response.data._id)
       window.scrollTo(0, 0)
 
       return { success: true }

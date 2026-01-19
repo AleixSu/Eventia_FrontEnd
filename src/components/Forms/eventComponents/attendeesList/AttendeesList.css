@@ -155,71 +155,11 @@
   color: var(--color-bg);
 }
 
-.attendeesRoll {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  max-height: 24rem;
-  overflow-y: auto;
-}
-
-.attendeesRoll::-webkit-scrollbar {
-  width: 8px;
-}
-
-.attendeesRoll::-webkit-scrollbar-track {
-  background: rgb(7, 7, 7);
-  border-radius: 4px;
-}
-
-.attendeesRoll::-webkit-scrollbar-thumb {
-  background: var(--color-nav);
-  border-radius: 4px;
-}
-
-.attendeesRoll::-webkit-scrollbar-thumb:hover {
-  background: var(--color-nav);
-}
-
-.attendeeItem {
-  height: 55px;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background-color: rgba(7, 7, 7, 0.541);
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  transition: background-color 0.2s ease;
-}
-
-.attendeeNumber {
-  color: #6b7280;
-  font-weight: 600;
-  width: 2rem;
-  flex-shrink: 0;
-}
-
-.attendeeAvatar {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.attendeeName {
-  color: var(--color-bg);
-  font-size: 1rem;
-}
-
 .noResults p {
   color: var(--color-bg);
 }
 
 @media (max-width: 768px) {
-  .attendeesRoll {
-    max-height: 20rem;
-  }
   #attendeesList {
     padding: 1.5rem;
   }
@@ -249,17 +189,5 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
-  }
-  .attendeeItem {
-    padding: 0.5rem;
-  }
-
-  .attendeeAvatar {
-    width: 2rem;
-    height: 2rem;
-  }
-
-  .attendeeName {
-    font-size: 0.875rem;
   }
 }

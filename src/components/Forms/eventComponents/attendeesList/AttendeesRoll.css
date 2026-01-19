@@ -1,0 +1,47 @@
+.attendeesRoll {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 24rem;
+  overflow-y: auto;
+}
+
+.attendeesRoll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.attendeesRoll::-webkit-scrollbar-track {
+  background: rgb(7, 7, 7);
+  border-radius: 4px;
+}
+
+.attendeesRoll::-webkit-scrollbar-thumb {
+  background: var(--color-nav);
+  border-radius: 4px;
+}
+
+.attendeesRoll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-nav);
+}
+
+.attendeeItem {
+  height: 55px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: rgba(7, 7, 7, 0.541);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+@media (max-width: 768px) {
+  .attendeesRoll {
+    max-height: 20rem;
+  }
+}
+@media (max-width: 480px) {
+  .attendeeItem {
+    padding: 0.5rem;
+  }
+}

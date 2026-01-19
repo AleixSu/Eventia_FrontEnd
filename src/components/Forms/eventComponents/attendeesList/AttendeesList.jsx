@@ -4,6 +4,8 @@ import Button from '../../../UI/button/Button'
 import AttendeeCard from '../../../UI/card/attendeeCard/AttendeeCard'
 import { API } from '../../../../utils/api/api'
 import { useAuthContext } from '../../../../context/AuthContext'
+import AttendeesRoll from './attendeesRoll'
+import LoadingIcon from '../../../UI/loadingIcon/LoadingIcon'
 
 const AttendeesList = ({ event }) => {
   const { token } = useAuthContext()
@@ -46,7 +48,7 @@ const AttendeesList = ({ event }) => {
 
   useEffect(() => {
     if (!openAttendeeList) return
-
+    setLoading(true)
     const timeout = setTimeout(() => {
       handleSearchInput(searchQuery)
     }, 500)
@@ -76,8 +78,8 @@ const AttendeesList = ({ event }) => {
               {event.attendees.length === 0
                 ? 'Be the firsts to attend to this '
                 : event.attendees.length - 5 < 1
-                ? `${event.attendees.length}`
-                : `+ ${event.attendees.length - 5}`}{' '}
+                  ? `${event.attendees.length}`
+                  : `+ ${event.attendees.length - 5}`}{' '}
               going{' '}
             </p>
           </div>
@@ -116,45 +118,23 @@ const AttendeesList = ({ event }) => {
             <input
               type='text'
               placeholder='Search attendees...'
-              className='searchInputAttendees '
+              className='searchInputAttendees'
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
           {searchQuery.length === 0 ? (
+            <AttendeesRoll attendees={event.attendees} />
+          ) : loading ? (
+            <LoadingIcon size={50} borderSize={4} />
+          ) : foundAttendees.length > 0 ? (
             <div className='attendeesRoll'>
-              {event.attendees.map((attendee, i) => (
-                <div key={attendee._id} className='attendeeItem'>
-                  <div className='attendeeNumber'>{i + 1}.</div>
-                  <img
-                    src={attendee.profileImg || '/images/noProfileImg.png'}
-                    alt={attendee.nickName}
-                    className='attendeeAvatar'
-                  />
-                  <span className='attendeeName'>{attendee.nickName}</span>
-                </div>
-              ))}{' '}
+              <AttendeesRoll attendees={foundAttendees} />
             </div>
           ) : (
-            <div className='attendeesRoll'>
-              {foundAttendees.length > 0 ? (
-                foundAttendees.map((attendee, i) => (
-                  <div key={attendee._id} className='attendeeItem'>
-                    <div className='attendeeNumber'>{i + 1}.</div>
-                    <img
-                      src={attendee.profileImg || '/images/noProfileImg.png'}
-                      alt={attendee.nickName}
-                      className='attendeeAvatar'
-                    />
-                    <span className='attendeeName'>{attendee.nickName}</span>
-                  </div>
-                ))
-              ) : (
-                <div className='noResults'>
-                  <p>No attendees found matching "{searchQuery}"</p>
-                </div>
-              )}
+            <div className='noResults'>
+              <p>No attendees found matching "{searchQuery}"</p>
             </div>
           )}
         </div>
