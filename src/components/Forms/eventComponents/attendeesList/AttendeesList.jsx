@@ -4,7 +4,7 @@ import Button from '../../../UI/button/Button'
 import AttendeeCard from '../../../UI/card/attendeeCard/AttendeeCard'
 import { API } from '../../../../utils/api/api'
 import { useAuthContext } from '../../../../context/AuthContext'
-import AttendeesRoll from './attendeesRoll'
+import AttendeesRoll from './AttendeesRoll'
 import LoadingIcon from '../../../UI/loadingIcon/LoadingIcon'
 
 const AttendeesList = ({ event }) => {
