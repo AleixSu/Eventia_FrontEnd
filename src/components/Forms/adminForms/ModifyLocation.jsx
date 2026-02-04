@@ -8,7 +8,7 @@ import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 import { useAuthContext } from '../../../context/AuthContext'
 
-const ModifyLocation = () => {
+const ModifyLocation = ({ locationsAvailable }) => {
   const [error, setError] = useState('')
   const [hiddenForm, setHiddenForm] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -24,8 +24,9 @@ const ModifyLocation = () => {
   const onSubmit = async (values) => {
     setError('')
     setLoading(true)
+    console.log(values.locationCountry)
 
-    const body = { country: values.country }
+    const body = { country: values.locationCountry }
 
     try {
       const result = await API({
@@ -70,15 +71,32 @@ const ModifyLocation = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className='row_element_admin'>
-          <Input
-            id='country'
-            labelText='Location Name'
-            className='formLocationNameModify'
-            register={register}
-            required={true}
-            errors={formState.errors}
-            errorMessage={'Location Name is required!'}
-          />
+          <div className='formModifyCountryWrapper'>
+            <label htmlFor='locationCountry'>Country</label>
+            <select
+              id='locationCountry'
+              className={
+                formState.errors.locationCountry
+                  ? 'redInput formCountryLocation'
+                  : 'formCountryLocation'
+              }
+              {...register('locationCountry', {
+                required: 'You have to select a country!'
+              })}
+            >
+              <option value=''>Select a country</option>
+              {locationsAvailable.map((location) => (
+                <option key={location._id} value={location.country}>
+                  {location.country}
+                </option>
+              ))}
+            </select>
+            {formState.errors.locationCountry && (
+              <span className='errorMessage'>
+                {formState.errors.locationCountry.message}
+              </span>
+            )}
+          </div>
         </div>
         <div id='endFormModifyLocation'>
           {' '}

@@ -7,11 +7,10 @@ import { API } from '../../../utils/api/api'
 import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 
-const EventForm = () => {
+const EventForm = ({ locationsAvailable, onEventCreated }) => {
   const [error, setError] = useState('')
   const [hiddenForm, setHiddenForm] = useState(false)
   const [success, setSuccess] = useState(false)
-  const [locationsAvailable, setLocationsAvailable] = useState([])
   const [loading, setLoading] = useState(false)
   const { token } = useAuthContext()
 
@@ -27,24 +26,6 @@ const EventForm = () => {
       eventBgImg: null
     }
   })
-
-  useEffect(() => {
-    const fetchLocations = async () => {
-      try {
-        const response = await API({
-          endpoint: '/locations/countries'
-        })
-
-        if (response.status === 200) {
-          setLocationsAvailable(response.data)
-        }
-      } catch (err) {
-        console.error('Error fetching locations:', err)
-      }
-    }
-
-    fetchLocations()
-  }, [])
 
   const onSubmit = async (values) => {
     setError('')
@@ -82,6 +63,7 @@ const EventForm = () => {
         reset()
         setTimeout(() => setSuccess(false), 3000)
         setLoading(false)
+        onEventCreated()
       } else {
         const errorMsg =
           result.data?.error ||

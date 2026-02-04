@@ -13,7 +13,7 @@ const UpdateInfoUser = ({ user }) => {
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const [deleteButton, setDeleteButton] = useState(false)
-  const { token } = useAuthContext()
+  const { token, updateUser } = useAuthContext()
   const navigate = useNavigate()
 
   const { handleSubmit, register, formState } = useForm({

@@ -7,9 +7,10 @@ import { API } from '../../../utils/api/api'
 import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 import { useNavigate } from 'react-router-dom'
+import DeleteMessage from '../../UI/deleteMessage/DeleteMessage'
 
 const UpdateInfoEvent = ({ event }) => {
-  const [error, setError] = useState('d')
+  const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [locationsAvailable, setLocationsAvailable] = useState([])
   const [deleteButton, setDeleteButton] = useState(false)

@@ -155,9 +155,11 @@ const RegisterForm = ({ onSuccess }) => {
           </ul>
         </div>
         {loading ? (
-          <LoadingIcon size={25} borderSize={2} />
+          <span className='loadingSpanRegister'>
+            <LoadingIcon size={25} borderSize={2} />
+          </span>
         ) : success ? (
-          <span className='succesSpan'>Profile created!</span>
+          <span className='succesSpanRegister'>Profile created!</span>
         ) : null}
       </form>
     </div>

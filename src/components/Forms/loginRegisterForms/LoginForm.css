@@ -3,6 +3,14 @@
   width: 50%;
   z-index: 2;
 }
+.succesSpanLogin {
+  position: absolute;
+  bottom: 100px;
+}
+.loadingSpanLogin {
+  position: absolute;
+  bottom: 100px;
+}
 
 @media (max-width: 550px) {
   #signUpButton {

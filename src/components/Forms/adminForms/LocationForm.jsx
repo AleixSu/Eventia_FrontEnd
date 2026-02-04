@@ -7,7 +7,7 @@ import Input from '../../UI/inputDOM/Input'
 import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 
-const LocationForm = () => {
+const LocationForm = ({ onLocationCreated }) => {
   const [error, setError] = useState('')
   const [hiddenForm, setHiddenForm] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -49,6 +49,7 @@ const LocationForm = () => {
         reset()
         setTimeout(() => setSuccess(false), 3000)
         setLoading(false)
+        onLocationCreated() //Recibe la función desde el padre para que cada vez que creemos una localización se active la función y haga un fetch de las localizaciones en el padre (adminArea)
       } else {
         const errorMsg =
           result.data?.error ||

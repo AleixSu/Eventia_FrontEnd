@@ -8,7 +8,7 @@ import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 import { useAuthContext } from '../../../context/AuthContext'
 
-const ModifyEvent = () => {
+const ModifyEvent = ({ eventsNames }) => {
   const [error, setError] = useState('')
   const [hiddenForm, setHiddenForm] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -34,6 +34,8 @@ const ModifyEvent = () => {
         method: 'POST',
         token: token
       })
+      console.log(values.eventName)
+
       if (result.status === 201 || result.status === 200) {
         reset()
         setTimeout(() => {
@@ -70,15 +72,32 @@ const ModifyEvent = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className='row_element_admin'>
-          <Input
-            id='eventName'
-            labelText='Event Name'
-            className='formEventNameModify'
-            register={register}
-            required={true}
-            errors={formState.errors}
-            errorMessage={'Event Name is required!'}
-          />
+          <div className='formModifyEventWrapper'>
+            <label htmlFor='eventName'>Event</label>
+            <select
+              id='eventName'
+              className={
+                formState.errors.eventName
+                  ? 'redInput formCountryLocation'
+                  : 'formCountryLocation'
+              }
+              {...register('eventName', {
+                required: 'You have to select an event!'
+              })}
+            >
+              <option value=''>Select an Event</option>
+              {eventsNames.map((eventName) => (
+                <option key={eventName._id} value={eventName.eventName}>
+                  {eventName.eventName}
+                </option>
+              ))}
+            </select>
+            {formState.errors.eventName && (
+              <span className='errorMessage'>
+                {formState.errors.eventName.message}
+              </span>
+            )}
+          </div>
         </div>
         <div id='endFormModifyEvent'>
           {' '}

@@ -76,9 +76,11 @@ const LoginForm = ({ onSuccess }) => {
           Sign In
         </button>
         {loading ? (
-          <LoadingIcon size={25} borderSize={2} />
+          <span className='loadingSpanLogin'>
+            <LoadingIcon size={25} borderSize={2} />
+          </span>
         ) : success ? (
-          <span className='succesSpan'>Logged!</span>
+          <span className='succesSpanLogin'>Logged!</span>
         ) : null}
       </form>
     </div>

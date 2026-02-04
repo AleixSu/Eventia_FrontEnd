@@ -5,10 +5,14 @@
   z-index: 1;
 }
 
-.succesSpan {
-  margin-top: 25px;
+.succesSpanRegister {
+  position: absolute;
+  bottom: 45px;
 }
-
+.loadingSpanRegister {
+  position: absolute;
+  bottom: 45px;
+}
 .passwordRequirements {
   position: absolute;
   bottom: 5px;

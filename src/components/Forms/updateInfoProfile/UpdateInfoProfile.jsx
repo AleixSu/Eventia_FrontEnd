@@ -7,6 +7,7 @@ import Input from '../../UI/inputDOM/Input'
 import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 import { useNavigate } from 'react-router-dom'
+import DeleteMessage from '../../UI/deleteMessage/DeleteMessage'
 
 const UpdateInfoProfile = () => {
   const [error, setError] = useState('')
@@ -267,7 +268,12 @@ const UpdateInfoProfile = () => {
           {deleteButton ? (
             <DeleteMessage
               elementToErase={'profile'}
-              yesFnc={() => handleDeleteAccount()}
+              yesFnc={() => {
+                handleDeleteAccount()
+                setTimeout(() => {
+                  navigate('/')
+                }, 500)
+              }}
               noFnc={() => setDeleteButton(false)}
             />
           ) : null}
