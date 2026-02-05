@@ -14,33 +14,33 @@ const HomeEventCard = ({ event }) => {
       className='homeEventCard'
       state={{ event }}
     >
-      <div class='event-card'>
-        <div class='event-card-image-wrapper'>
+      <div className='event-card'>
+        <div className='event-card-image-wrapper'>
           <img
             src={event.eventBgImg}
             alt={event.eventName}
-            class='event-card-image'
+            className='event-card-image'
           />
-          <div class='event-card-gradient'></div>
-          <div class='event-card-title-wrapper'>
-            <h3 class='event-card-title'>{event.eventName}</h3>
+          <div className='event-card-gradient'></div>
+          <div className='event-card-title-wrapper'>
+            <h3 className='event-card-title'>{event.eventName}</h3>
           </div>
         </div>
-        <div class='event-card-content'>
-          <div class='event-card-info-row'>
+        <div className='event-card-content'>
+          <div className='event-card-info-row'>
             <p>{eventDate}</p>
           </div>
-          <div class='event-card-info-row'>
+          <div className='event-card-info-row'>
             <p>
               {event.locationCity}, {event.locationCountry.country}
             </p>
           </div>
-          <div class='event-card-info-row'>
+          <div className='event-card-info-row'>
             <p>
               {event.attendees.length} / {event.maxCapacity}
             </p>
           </div>
-          <button class='event-card-button'>View Details</button>
+          <button className='event-card-button'>View Details</button>
         </div>
       </div>
     </NavLink>

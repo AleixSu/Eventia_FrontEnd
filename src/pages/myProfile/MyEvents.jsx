@@ -42,32 +42,38 @@ const MyEvents = () => {
   if (!userInfo) return <div>No user info found</div>
 
   return (
-    <section id='myEvents'>
-      <Banner
-        className={'backgroundMyEvents'}
-        imageUrl={myEventsSrc.bgImage}
-        logo={myEventsSrc.logoBanner}
-      />
-      <article id='articleMyEvents'>
-        <div id='myEventsDiv'>
-          <h2>My Events</h2>
-          <div id='myEventsList'>
-            {!userInfo.attendingEvents ||
-            userInfo.attendingEvents.length === 0 ? (
-              <p>You haven't signed up for any events yet!</p>
-            ) : (
-              <ul>
-                {userInfo.attendingEvents.map((attendingEvent) => (
-                  <li key={attendingEvent._id}>
-                    <EventLocationCard event={attendingEvent} />
-                  </li>
-                ))}
-              </ul>
-            )}
+    <>
+      <Helmet>
+        <title>My Events | EventHub</title>
+        <meta name='robots' content='noindex, nofollow' />
+      </Helmet>
+      <section id='myEvents'>
+        <Banner
+          className={'backgroundMyEvents'}
+          imageUrl={myEventsSrc.bgImage}
+          logo={myEventsSrc.logoBanner}
+        />
+        <article id='articleMyEvents'>
+          <div id='myEventsDiv'>
+            <h2>My Events</h2>
+            <div id='myEventsList'>
+              {!userInfo.attendingEvents ||
+              userInfo.attendingEvents.length === 0 ? (
+                <p>You haven't signed up for any events yet!</p>
+              ) : (
+                <ul>
+                  {userInfo.attendingEvents.map((attendingEvent) => (
+                    <li key={attendingEvent._id}>
+                      <EventLocationCard event={attendingEvent} />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
-        </div>
-      </article>
-    </section>
+        </article>
+      </section>{' '}
+    </>
   )
 }
 

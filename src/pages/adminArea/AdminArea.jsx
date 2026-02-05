@@ -7,6 +7,7 @@ import ModifyUserProfile from '../../components/Forms/adminForms/ModifyUserProfi
 import ModifyEvent from '../../components/Forms/adminForms/ModifyEvent'
 import ModifyLocation from '../../components/Forms/adminForms/ModifyLocation'
 import { API } from '../../utils/api/api'
+import { Helmet } from 'react-helmet-async'
 
 const AdminArea = () => {
   const [locationsAvailable, setLocationsAvailable] = useState([])
@@ -49,28 +50,34 @@ const AdminArea = () => {
   }, [])
 
   return (
-    <section id='adminArea'>
-      <Banner
-        className={'backgroundAdminArea'}
-        imageUrl={'./images/adminAreaBg.jpeg'}
-        logo={'/images/adminLogo.png'}
-      />
-      <article id='articleAdminArea'>
-        <div id='adminAreaDiv'>
-          <h2>Admin Area</h2>
-          <div id='formsDiv'>
-            <LocationForm onLocationCreated={fetchLocations} />
-            <EventForm
-              locationsAvailable={locationsAvailable}
-              onEventCreated={fetchEventNames}
-            />
-            <ModifyUserProfile />
-            <ModifyEvent eventsNames={eventsNames} />
-            <ModifyLocation locationsAvailable={locationsAvailable} />
+    <>
+      <Helmet>
+        <title>Admin Area | EventHub</title>
+        <meta name='robots' content='noindex, nofollow' />
+      </Helmet>
+      <section id='adminArea'>
+        <Banner
+          className={'backgroundAdminArea'}
+          imageUrl={'./images/adminAreaBg.jpeg'}
+          logo={'/images/adminLogo.png'}
+        />
+        <article id='articleAdminArea'>
+          <div id='adminAreaDiv'>
+            <h2>Admin Area</h2>
+            <div id='formsDiv'>
+              <LocationForm onLocationCreated={fetchLocations} />
+              <EventForm
+                locationsAvailable={locationsAvailable}
+                onEventCreated={fetchEventNames}
+              />
+              <ModifyUserProfile />
+              <ModifyEvent eventsNames={eventsNames} />
+              <ModifyLocation locationsAvailable={locationsAvailable} />
+            </div>
           </div>
-        </div>
-      </article>
-    </section>
+        </article>
+      </section>{' '}
+    </>
   )
 }
 

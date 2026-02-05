@@ -3,22 +3,29 @@ import React from 'react'
 import UpdateInfoEvent from '../../components/Forms/updateEventInfo/UpdateInfoEvent'
 import Banner from '../../components/Layout/banner/Banner'
 import './EditEvent.css'
+import { Helmet } from 'react-helmet-async'
 
 const EditEvent = () => {
   const location = useLocation()
   const event = location.state?.event
 
   return (
-    <section id='editEventAdminArea'>
-      <Banner
-        className={'backgroundEditEventAdminArea'}
-        imageUrl={'/images/adminAreaBg.jpeg'}
-        logo={'/images/adminLogo.png'}
-      />
-      <article id='articleEditEventAdminArea'>
-        <UpdateInfoEvent event={event} />
-      </article>
-    </section>
+    <>
+      <Helmet>
+        <title>Edit Event| EventHub</title>
+        <meta name='robots' content='noindex, nofollow' />
+      </Helmet>
+      <section id='editEventAdminArea'>
+        <Banner
+          className={'backgroundEditEventAdminArea'}
+          imageUrl={'/images/adminAreaBg.jpeg'}
+          logo={'/images/adminLogo.png'}
+        />
+        <article id='articleEditEventAdminArea'>
+          <UpdateInfoEvent event={event} />
+        </article>
+      </section>{' '}
+    </>
   )
 }
 

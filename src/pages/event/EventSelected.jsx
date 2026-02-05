@@ -9,6 +9,7 @@ import Button from '../../components/UI/button/Button'
 import { useAuthContext } from '../../context/AuthContext'
 import LoadingIcon from '../../components/UI/loadingIcon/LoadingIcon'
 import AttendeesList from '../../components/Forms/eventComponents/attendeesList/AttendeesList'
+import { Helmet } from 'react-helmet-async'
 
 const EventSelected = () => {
   const { id } = useParams()
@@ -103,87 +104,85 @@ const EventSelected = () => {
   if (error && !event) return <div className='error'>{error}</div>
   if (!event) return <div>Event not found</div>
 
-  let numeration = 1
-
   return (
-    <section id='eventSelected'>
-      <Banner imageUrl={event.eventBgImg} logo={locationsSrc.logoBanner} />
-      <article id='articleEventSelected'>
-        <div id='eventHeader'>
-          <h2>
-            {event.eventName} - {event.locationCity},{' '}
-            {event.locationCountry?.country} (
-            {new Date(event.date).toLocaleDateString()})
-          </h2>
-          <Button
-            className={'backButton'}
-            text={'Back to Events'}
-            fnc={() => navigate(-1)}
-          />
-        </div>
-        <div id='infoDiv'>
-          <img src={event.eventImg} alt='Event Img' />
-          <div id='eventDescriptionDiv'>
-            <p>{event.description}</p>
-            <div id='buttonMessagesDiv'>
-              {attending ? (
-                <div id='loadingEventDiv'>
-                  {' '}
-                  <LoadingIcon size={25} borderSize={2} />
-                </div>
-              ) : null}
-              {success ? (
-                <div className='confirmationEventText'>
-                  <p>
-                    {imGoing
-                      ? "¡You're in! Your spot at the event is confirmed."
-                      : "You've cancelled your attendance."}
-                  </p>
-                </div>
-              ) : null}
-              {error && <p className='errorMessage'>{error}</p>}
-              {user ? (
-                <Button
-                  className={imGoing ? 'cancelButton' : 'assistButton'}
-                  text={imGoing ? "I've changed my mind.." : "I'm Going!"}
-                  fnc={handleAssistButton}
-                />
-              ) : null}
+    <>
+      <Helmet>
+        <title>{event.eventName} | EventHub</title>
+        <meta
+          name='description'
+          content={`Join ${event.eventName} in ${event.locationCity}. ${event.description.substring(0, 150)}...`}
+        />
+        <link
+          rel='canonical'
+          href={`${import.meta.env.VITE_APP_URL}/events/${event._id}`}
+        />
+        <meta property='og:title' content={event.eventName} />
+        <meta property='og:description' content={event.description} />
+        <meta property='og:image' content={event.eventImg} />
+        <meta property='og:url' content={window.location.href} />
+      </Helmet>
+      <section id='eventSelected'>
+        <Banner imageUrl={event.eventBgImg} logo={locationsSrc.logoBanner} />
+        <article id='articleEventSelected'>
+          <div id='eventHeader'>
+            <h2>
+              {event.eventName} - {event.locationCity},{' '}
+              {event.locationCountry?.country} (
+              {new Date(event.date).toLocaleDateString()})
+            </h2>
+            <Button
+              className={'backButton'}
+              text={'Back to Events'}
+              fnc={() => navigate(-1)}
+            />
+          </div>
+          <div id='infoDiv'>
+            <img src={event.eventImg} alt='Event Img' />
+            <div id='eventDescriptionDiv'>
+              <p>{event.description}</p>
+              <div id='buttonMessagesDiv'>
+                {attending ? (
+                  <div id='loadingEventDiv'>
+                    {' '}
+                    <LoadingIcon size={25} borderSize={2} />
+                  </div>
+                ) : null}
+                {success ? (
+                  <div className='confirmationEventText'>
+                    <p>
+                      {imGoing
+                        ? "¡You're in! Your spot at the event is confirmed."
+                        : "You've cancelled your attendance."}
+                    </p>
+                  </div>
+                ) : null}
+                {error && <p className='errorMessage'>{error}</p>}
+                {user ? (
+                  <Button
+                    className={imGoing ? 'cancelButton' : 'assistButton'}
+                    text={imGoing ? "I've changed my mind.." : "I'm Going!"}
+                    fnc={handleAssistButton}
+                  />
+                ) : null}
+              </div>
             </div>
           </div>
-        </div>
-        <div id='attendeesListDiv'>
-          {user ? (
-            <AttendeesList event={event} />
-          ) : (
-            /*               !event.attendees || event.attendees.length === 0 ? (
-                <h4 id='beTheFirst'>
-                  ¡Come on, be the first to confirm your attendance to this
-                  event!
+          <div id='attendeesListDiv'>
+            {user ? (
+              <AttendeesList event={event} />
+            ) : (
+              <>
+                <h2>Who's going:</h2>
+                <h4 id='registerNote'>
+                  ¡Register or login to be able to assist the event and watch
+                  who's going!
                 </h4>
-              ) : (
-                <ul>
-                  {event.attendees.map((attendee) => (
-                    <li key={attendee._id}>
-                      <AttendeeCard
-                        attendee={attendee}
-                        numeration={numeration++}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              ) */
-            <>
-              <h2>Who's going:</h2>
-              <h4 id='registerNote'>
-                ¡Register or login to be able to assist the event and watch
-                who's going!
-              </h4>
-            </>
-          )}
-        </div>
-      </article>
-    </section>
+              </>
+            )}
+          </div>
+        </article>
+      </section>
+    </>
   )
 }
 

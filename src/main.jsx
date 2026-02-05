@@ -19,48 +19,51 @@ import EditUser from './pages/adminArea/EditUser.jsx'
 import EditEvent from './pages/adminArea/EditEvent.jsx'
 import EditLocation from './pages/adminArea/EditLocation.jsx'
 import ScrollToTop from './utils/globalFnc/ScrollToTop.jsx'
+import { HelmetProvider } from 'react-helmet-async'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-      <ModalProvider>
-        <FilterProvider>
-          <BrowserRouter>
-            <ScrollToTop />
-            <Routes>
-              <Route path='/' element={<App />}>
-                <Route index element={<Home />}></Route>
-                <Route path='/Events' element={<Event />}></Route>
-                <Route
-                  path='/Events/Event/:id'
-                  element={<EventSelected />}
-                ></Route>
-                <Route
-                  path='/Locations/Location/:id'
-                  element={<LocationSelected />}
-                ></Route>
-                <Route path='/Locations' element={<Location />}></Route>
-                <Route path='/profile' element={<MyProfile />}></Route>
-                <Route path='/my_events' element={<MyEvents />}></Route>
-                <Route path='/admin_area' element={<AdminArea />}></Route>
-                <Route
-                  path='/admin_area/edit_user/:id'
-                  element={<EditUser />}
-                ></Route>
-                <Route
-                  path='/admin_area/edit_event/:id'
-                  element={<EditEvent />}
-                ></Route>
-                <Route
-                  path='/admin_area/edit_location/:id'
-                  element={<EditLocation />}
-                ></Route>
-                <Route path='*' element={<RouteNotFound />}></Route>
-              </Route>
-            </Routes>
-          </BrowserRouter>
-        </FilterProvider>
-      </ModalProvider>
-    </AuthProvider>
+    <HelmetProvider>
+      <AuthProvider>
+        <ModalProvider>
+          <FilterProvider>
+            <BrowserRouter>
+              <ScrollToTop />
+              <Routes>
+                <Route path='/' element={<App />}>
+                  <Route index element={<Home />}></Route>
+                  <Route path='/Events' element={<Event />}></Route>
+                  <Route
+                    path='/Events/Event/:id'
+                    element={<EventSelected />}
+                  ></Route>
+                  <Route
+                    path='/Locations/Location/:id'
+                    element={<LocationSelected />}
+                  ></Route>
+                  <Route path='/Locations' element={<Location />}></Route>
+                  <Route path='/profile' element={<MyProfile />}></Route>
+                  <Route path='/my_events' element={<MyEvents />}></Route>
+                  <Route path='/admin_area' element={<AdminArea />}></Route>
+                  <Route
+                    path='/admin_area/edit_user/:id'
+                    element={<EditUser />}
+                  ></Route>
+                  <Route
+                    path='/admin_area/edit_event/:id'
+                    element={<EditEvent />}
+                  ></Route>
+                  <Route
+                    path='/admin_area/edit_location/:id'
+                    element={<EditLocation />}
+                  ></Route>
+                  <Route path='*' element={<RouteNotFound />}></Route>
+                </Route>
+              </Routes>
+            </BrowserRouter>
+          </FilterProvider>
+        </ModalProvider>
+      </AuthProvider>
+    </HelmetProvider>
   </StrictMode>
 )

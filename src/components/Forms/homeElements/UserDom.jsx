@@ -28,14 +28,14 @@ const UserDom = ({ events, eventsNumber }) => {
           ) : (
             <ul>
               {events.map((event) => (
-                <li>
+                <li key={event._id}>
                   <HomeEventCard event={event} />
                 </li>
               ))}
             </ul>
           )}
-          <div class='exploreSection'>
-            <p class='exploreTitle'>Explore More</p>
+          <div className='exploreSection'>
+            <p className='exploreTitle'>Explore More</p>
             <NavLink to={'Events'} className={'exploreLink'}>
               {eventsNumber} Featured Events Await
             </NavLink>
