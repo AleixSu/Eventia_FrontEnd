@@ -18,7 +18,6 @@ import MyEvents from './pages/myProfile/MyEvents.jsx'
 import EditUser from './pages/adminArea/EditUser.jsx'
 import EditEvent from './pages/adminArea/EditEvent.jsx'
 import EditLocation from './pages/adminArea/EditLocation.jsx'
-import ScrollToTop from './utils/globalFnc/ScrollToTop.jsx'
 import { HelmetProvider } from 'react-helmet-async'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
@@ -38,7 +37,6 @@ createRoot(document.getElementById('root')).render(
           <ModalProvider>
             <FilterProvider>
               <BrowserRouter>
-                <ScrollToTop />
                 <Routes>
                   <Route path='/' element={<App />}>
                     <Route index element={<Home />}></Route>

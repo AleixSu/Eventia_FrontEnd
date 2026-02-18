@@ -5,45 +5,31 @@ import { useAuthContext } from '../../../../context/AuthContext'
 import AttendeesRoll from './AttendeesRoll'
 import LoadingIcon from '../../../UI/loadingIcon/LoadingIcon'
 import { useGetUserByNameOrNickname } from '../../../../utils/api/queries/users/useGetUserByNameOrNickname'
+import useDebounce from '../../../../utils/Hooks/useDebounce'
 
 const AttendeesList = ({ event }) => {
   const { token } = useAuthContext()
   const [searchQuery, setSearchQuery] = useState('')
   const [foundAttendees, setFoundAttendees] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [openAttendeeList, setOpenAtteendeeList] = useState(false)
 
+  const debouncedSearch = useDebounce(searchQuery, 500)
   const getUsersByNameOrNicknameMutation = useGetUserByNameOrNickname(token)
 
-  const handleSearchInput = async (searchQuery) => {
-    if (!searchQuery.trim()) {
+  useEffect(() => {
+    if (!openAttendeeList) return
+    if (!debouncedSearch.trim()) {
       setFoundAttendees([])
       return
     }
 
     getUsersByNameOrNicknameMutation.mutate(
-      { searchQuery, eventId: event._id },
+      { searchQuery: debouncedSearch, eventId: event._id },
       {
-        onSuccess: (data) => {
-          setFoundAttendees(data)
-          setLoading(false)
-        },
-        onError: () => {
-          setLoading(false)
-        }
+        onSuccess: (data) => setFoundAttendees(data)
       }
     )
-  }
-  const [openAttendeeList, setOpenAtteendeeList] = useState(false)
-
-  useEffect(() => {
-    if (!openAttendeeList) return
-    setLoading(true)
-    const timeout = setTimeout(() => {
-      handleSearchInput(searchQuery)
-    }, 500)
-
-    return () => clearTimeout(timeout)
-  }, [searchQuery, openAttendeeList])
+  }, [debouncedSearch, openAttendeeList])
 
   return (
     <div id='attendeesListUser'>
@@ -98,7 +84,7 @@ const AttendeesList = ({ event }) => {
           fnc={() => setOpenAtteendeeList(!openAttendeeList)}
         />
       </div>
-      {openAttendeeList ? (
+      {openAttendeeList && (
         <div id='attendeesSection'>
           <div className='searchContainer'>
             <input
@@ -112,7 +98,8 @@ const AttendeesList = ({ event }) => {
 
           {searchQuery.length === 0 ? (
             <AttendeesRoll attendees={event.attendees} />
-          ) : loading || getUsersByNameOrNicknameMutation.isPending ? (
+          ) : getUsersByNameOrNicknameMutation.isPending ||
+            searchQuery !== debouncedSearch ? ( // 👈 así
             <LoadingIcon size={50} borderSize={4} />
           ) : foundAttendees.length > 0 ? (
             <div className='attendeesRoll'>
@@ -124,7 +111,7 @@ const AttendeesList = ({ event }) => {
             </div>
           )}
         </div>
-      ) : null}
+      )}
     </div>
   )
 }
