@@ -1,107 +1,68 @@
 import { useParams, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { API } from '../../utils/api/api'
 import Banner from '../../components/Layout/banner/Banner'
 import { locationsSrc } from '../../constants/locationConstants'
 import './EventSelected.css'
-import AttendeeCard from '../../components/UI/card/attendeeCard/AttendeeCard'
 import Button from '../../components/UI/button/Button'
 import { useAuthContext } from '../../context/AuthContext'
 import LoadingIcon from '../../components/UI/loadingIcon/LoadingIcon'
 import AttendeesList from '../../components/Forms/eventComponents/attendeesList/AttendeesList'
 import { Helmet } from 'react-helmet-async'
+import { useGetEventById } from '../../utils/api/queries/events/useGetEventById'
+import { useAssistManagement } from '../../utils/api/queries/users/useAssistManagement'
 
 const EventSelected = () => {
   const { id } = useParams()
   const location = useLocation()
   const navigate = useNavigate()
-  const [event, setEvent] = useState(location.state?.event || null)
-  const [loading, setLoading] = useState(true)
-  const [attending, setAttending] = useState(false)
-  const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [imGoing, setImGoing] = useState(false)
   const { user, token } = useAuthContext()
+
+  const {
+    data: event,
+    isLoading,
+    isError,
+    error
+  } = useGetEventById(id, location.state?.event)
+
+  const assistManagementMutation = useAssistManagement(token) //Aquí solo le pasamos lo que la petición necesitará.
 
   useEffect(() => {
     if (event && user && event.attendees) {
       const isAttending = event.attendees.some(
         (attendee) => attendee._id === user._id
       )
+      console.log(isAttending)
+
       setImGoing(isAttending)
     }
   }, [event, user])
 
-  useEffect(() => {
-    if (
-      event &&
-      event.attendees &&
-      event.attendees.length >= 0 &&
-      event.attendees[0]?.nickName !== undefined
-    ) {
-      setLoading(false)
-      return
-    }
+  const handleAssistButton = () => {
+    const wasGoing = imGoing
 
-    const fetchEvent = async () => {
-      try {
-        setLoading(true)
-        const result = await API({
-          endpoint: `/events/${id}`,
-          method: 'GET'
-        })
-
-        if (result.status === 200) {
-          setEvent(result.data)
-        } else {
-          setError('Event not found')
+    assistManagementMutation.mutate(
+      // Y aquí ya si que le pasamos lo que la lógica dentro de la función useMutation necesitará.
+      {
+        eventId: event._id,
+        isCurrentlyGoing: wasGoing
+      },
+      {
+        onSuccess: () => {
+          setSuccess(true)
+          setTimeout(() => {
+            setSuccess(false)
+          }, 3000)
         }
-      } catch (err) {
-        setError('Error loading event')
-        console.error(err)
-      } finally {
-        setLoading(false)
       }
-    }
-
-    fetchEvent()
-  }, [id])
-
-  const handleAssistButton = async () => {
-    setAttending(true)
-    setError('')
-    try {
-      const endpoint = imGoing
-        ? `/events/${event._id}/unsign_up`
-        : `/events/${event._id}/sign_up`
-
-      const result = await API({
-        endpoint: endpoint,
-        method: 'PATCH',
-        token: token
-      })
-
-      if (result.status === 200) {
-        setEvent(result.data.event)
-        setAttending(false)
-        setSuccess(true)
-        setTimeout(() => {
-          setSuccess(false)
-        }, 3000)
-      } else {
-        setAttending(false)
-        console.error('Error with event attendance', result.data)
-        setError(result.data?.error || 'Error updating attendance')
-      }
-    } catch (err) {
-      setAttending(false)
-      console.error('Error:', err)
-      setError('Error updating attendance')
-    }
+    )
   }
 
-  if (loading) return <div className='loading'>Loading event...</div>
-  if (error && !event) return <div className='error'>{error}</div>
+  if (isLoading) {
+    return <LoadingIcon size={50} borderSize={4} text={'Loading event...'} />
+  }
+  if (isError && !event) return <div className='error'>{error.message}</div>
   if (!event) return <div>Event not found</div>
 
   return (
@@ -141,29 +102,37 @@ const EventSelected = () => {
             <div id='eventDescriptionDiv'>
               <p>{event.description}</p>
               <div id='buttonMessagesDiv'>
-                {attending ? (
+                {assistManagementMutation.isPending && (
                   <div id='loadingEventDiv'>
                     {' '}
                     <LoadingIcon size={25} borderSize={2} />
                   </div>
-                ) : null}
-                {success ? (
-                  <div className='confirmationEventText'>
-                    <p>
-                      {imGoing
-                        ? "¡You're in! Your spot at the event is confirmed."
-                        : "You've cancelled your attendance."}
+                )}
+
+                <div className='assistanceMessagesDiv'>
+                  {success && (
+                    <div className='confirmationEventText'>
+                      <p>
+                        {!assistManagementMutation.variables?.isCurrentlyGoing
+                          ? "¡You're in! Your spot at the event is confirmed."
+                          : "You've cancelled your attendance."}
+                      </p>
+                    </div>
+                  )}
+                  {assistManagementMutation.isError && (
+                    <p className='errorMessage'>
+                      {assistManagementMutation.error.message}
                     </p>
-                  </div>
-                ) : null}
-                {error && <p className='errorMessage'>{error}</p>}
-                {user ? (
+                  )}
+                </div>
+                {user && (
                   <Button
                     className={imGoing ? 'cancelButton' : 'assistButton'}
                     text={imGoing ? "I've changed my mind.." : "I'm Going!"}
                     fnc={handleAssistButton}
+                    disabled={assistManagementMutation.isPending}
                   />
-                ) : null}
+                )}
               </div>
             </div>
           </div>

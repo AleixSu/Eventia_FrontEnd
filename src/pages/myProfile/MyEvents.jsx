@@ -1,44 +1,24 @@
+import { Helmet } from 'react-helmet-async'
 import Banner from '../../components/Layout/banner/Banner'
 import EventLocationCard from '../../components/UI/card/eventCard/EventLocationCard'
 import { myEventsSrc } from '../../constants/myEventsConstants'
 import { useAuthContext } from '../../context/AuthContext'
-import { API } from '../../utils/api/api'
+import { useGetUser } from '../../utils/api/queries/users/useGetUser'
 import './MyEvents.css'
-
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import LoadingIcon from '../../components/UI/loadingIcon/LoadingIcon'
 
 const MyEvents = () => {
   const { user } = useAuthContext()
-  const [userInfo, setUserInfo] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        setLoading(true)
-        const response = await API({ endpoint: `/users/${user._id}` })
+  const { data: userInfo, isLoading, isError, error } = useGetUser(user?._id)
 
-        if (response.status === 200) {
-          setUserInfo(response.data)
-        } else {
-          setError('Error loading user info')
-        }
-      } catch (err) {
-        setError('Error loading user info')
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    if (user?._id) {
-      fetchUserInfo()
-    }
-  }, [user])
-
-  if (loading) return <div>Loading...</div>
-  if (error) return <div className='error'>{error}</div>
+  if (isLoading) {
+    return (
+      <LoadingIcon size={50} borderSize={4} text={'Loading user Info...'} />
+    )
+  }
+  if (isError) return <div className='error'>{error.message}</div>
   if (!userInfo) return <div>No user info found</div>
 
   return (

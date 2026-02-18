@@ -3,23 +3,21 @@ import './UpdateInfoEvent.css'
 import Input from '../../UI/inputDOM/Input'
 import { useForm } from 'react-hook-form'
 import { useAuthContext } from '../../../context/AuthContext'
-import { API } from '../../../utils/api/api'
 import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 import { useNavigate } from 'react-router-dom'
 import DeleteMessage from '../../UI/deleteMessage/DeleteMessage'
+import { useGetCountries } from '../../../utils/api/queries/locations/useGetCountries'
+import { useUpdateEvent } from '../../../utils/api/queries/events/useUpdateEvent'
+import { useDeleteEvent } from '../../../utils/api/queries/events/useDeleteEvent'
 
 const UpdateInfoEvent = ({ event }) => {
-  const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
-  const [locationsAvailable, setLocationsAvailable] = useState([])
   const [deleteButton, setDeleteButton] = useState(false)
-  const [loading, setLoading] = useState(false)
   const [currentEvent, setCurrentEvent] = useState(event)
   const { token } = useAuthContext()
   const navigate = useNavigate()
-
-  const { handleSubmit, register, formState, reset, setValue } = useForm({
+  const { handleSubmit, register, formState, setValue } = useForm({
     defaultValues: {
       eventName: event?.eventName || '',
       date: event?.date ? new Date(event.date).toISOString().split('T')[0] : '',
@@ -45,28 +43,13 @@ const UpdateInfoEvent = ({ event }) => {
     setValue('description', event?.description || '')
   }, [event, setValue])
 
-  useEffect(() => {
-    const fetchLocations = async () => {
-      try {
-        const response = await API({
-          endpoint: '/locations/countries'
-        })
+  const { data: locationsAvailable = [] } = useGetCountries()
 
-        if (response.status === 200) {
-          setLocationsAvailable(response.data)
-        }
-      } catch (err) {
-        console.error('Error fetching locations:', err)
-      }
-    }
+  const updateEventMutation = useUpdateEvent(token)
+  const deleteEventMutation = useDeleteEvent(token)
 
-    fetchLocations()
-  }, [])
-
-  const onSubmit = async (values) => {
-    setError('')
+  const onSubmit = (values) => {
     setSuccess(false)
-    setLoading(true)
 
     const locationCountryValue =
       values.locationCountry || event.locationCountry?._id
@@ -88,71 +71,36 @@ const UpdateInfoEvent = ({ event }) => {
       formData.append('eventBgImg', values.eventBgImg[0])
     }
 
-    try {
-      const result = await API({
-        endpoint: `/events/${event._id}`,
-        body: formData,
-        method: 'PATCH',
-        isJSON: false,
-        token: token
-      })
-
-      if (result.status === 200 || result.status === 201) {
-        setSuccess(true)
-        setCurrentEvent(result.data)
-        setValue('eventName', result.data.eventName)
-        setValue(
-          'date',
-          result.data.date
-            ? new Date(result.data.date).toISOString().split('T')[0]
-            : ''
-        )
-        setValue('locationCountry', result.data.locationCountry?._id || '')
-        setValue('locationCity', result.data.locationCity)
-        setValue('maxCapacity', result.data.maxCapacity)
-        setValue('description', result.data.description)
-
-        setTimeout(() => setSuccess(false), 3000)
-      } else {
-        const errorMsg =
-          result.data?.error ||
-          result.data?.message ||
-          result.data ||
-          'Error updating event'
-        setError(errorMsg)
+    updateEventMutation.mutate(
+      { formData, eventId: event._id },
+      {
+        onSuccess: (data) => {
+          setSuccess(true)
+          setCurrentEvent(data)
+          setValue('eventName', data.eventName)
+          setValue(
+            'date',
+            data.date ? new Date(data.date).toISOString().split('T')[0] : ''
+          )
+          setValue('locationCountry', data.locationCountry?._id || '')
+          setValue('locationCity', data.locationCity)
+          setValue('maxCapacity', data.maxCapacity)
+          setValue('description', data.description)
+          setTimeout(() => setSuccess(false), 3000)
+        }
       }
-    } catch (err) {
-      setError(err.message || 'Error updating event')
-    } finally {
-      setLoading(false)
-    }
+    )
   }
 
   const handleDeleteEvent = async () => {
-    setError('')
-    setLoading(true)
     setSuccess(false)
 
-    try {
-      const result = await API({
-        endpoint: `/events/${event._id}`,
-        method: 'DELETE',
-        token: token
-      })
-
-      if (result.status === 200) {
+    deleteEventMutation.mutate(event._id, {
+      onSuccess: (data) => {
         setSuccess(true)
-        setTimeout(() => {
-          navigate(-1)
-        }, 1000)
-      } else {
-        setError(result.data || 'Error deleting event')
+        navigate(-1)
       }
-    } catch (error) {
-      setError(error.message || 'Error deleting event')
-    } finally {
-      setLoading(false)
-    }
+    })
   }
 
   return (
@@ -291,24 +239,28 @@ const UpdateInfoEvent = ({ event }) => {
                   : 'Event modified successfully!'}
               </p>
             )}
-            {error && (
+            {(updateEventMutation.isError || deleteEventMutation.isError) && (
               <p className='errorMessage'>
-                {error ===
-                `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`
+                {updateEventMutation.error?.message ===
+                  `Unexpected token '<', "<!DOCTYPE "... is not valid JSON` ||
+                deleteEventMutation.error?.message ===
+                  `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`
                   ? 'Only the specified image formats are allowed.'
-                  : error}
+                  : updateEventMutation.error?.message ||
+                    deleteEventMutation.error?.message}
               </p>
             )}
           </div>
           <div id='loadingIconDivEvent'>
-            {loading ? (
+            {(deleteEventMutation.isPending ||
+              updateEventMutation.isPending) && (
               <LoadingIcon
                 text={deleteButton ? 'Deleting event' : 'Uploading new event..'}
                 size={25}
                 borderSize={2}
                 classList='formLoading'
               />
-            ) : null}
+            )}
           </div>
           <div id='modifyButtonDiv'>
             <Button

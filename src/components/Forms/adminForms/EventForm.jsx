@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import './EventForm.css'
 import Input from '../../UI/inputDOM/Input'
 import { useForm } from 'react-hook-form'
 import { useAuthContext } from '../../../context/AuthContext'
-import { API } from '../../../utils/api/api'
 import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
+import { useCreateEvent } from '../../../utils/api/queries/events/useCreateEvent'
 
-const EventForm = ({ locationsAvailable, onEventCreated }) => {
-  const [error, setError] = useState('')
+const EventForm = ({ locationsAvailable }) => {
   const [hiddenForm, setHiddenForm] = useState(false)
   const [success, setSuccess] = useState(false)
-  const [loading, setLoading] = useState(false)
   const { token } = useAuthContext()
 
   const { handleSubmit, register, formState, reset } = useForm({
@@ -27,13 +25,12 @@ const EventForm = ({ locationsAvailable, onEventCreated }) => {
     }
   })
 
+  const createEventMutation = useCreateEvent(token) //Declaramos nuestra función
+
   const onSubmit = async (values) => {
-    setError('')
     setSuccess(false)
-    setLoading(true)
 
     const formData = new FormData()
-
     formData.append('eventName', values.eventName)
     formData.append('date', values.date)
     formData.append('locationCountry', values.locationCountry)
@@ -49,36 +46,13 @@ const EventForm = ({ locationsAvailable, onEventCreated }) => {
       formData.append('eventBgImg', values.eventBgImg[0])
     }
 
-    try {
-      const result = await API({
-        endpoint: '/events',
-        body: formData,
-        method: 'POST',
-        isJSON: false,
-        token: token
-      })
-
-      if (result.status === 200 || result.status === 201) {
+    createEventMutation.mutate(formData, {
+      onSuccess: () => {
         setSuccess(true)
         reset()
         setTimeout(() => setSuccess(false), 3000)
-        setLoading(false)
-        onEventCreated()
-      } else {
-        const errorMsg =
-          result.data?.error ||
-          result.data?.message ||
-          result.data ||
-          'Error uploading new event'
-        setError(errorMsg)
-        setLoading(false)
       }
-    } catch (err) {
-      setError(err.message || 'Error creating event')
-      setLoading(false)
-    } finally {
-      setLoading(false)
-    }
+    }) //Le decimos a nuestra función de createEvent que se ejecute mediante ".mutate". Esto es lo que marca la diferencia del useQuery. useQuery se ejecuta automáticamente, useMutation solo cuando nosotros queramos mediante .mutate.
   }
 
   return (
@@ -200,7 +174,6 @@ const EventForm = ({ locationsAvailable, onEventCreated }) => {
               className={formState.errors.description ? 'redInput' : null}
               placeholder='Write a description for the event...'
               rows={8}
-              e
               style={{ width: '100%' }}
             ></textarea>
             {formState.errors.description && (
@@ -210,29 +183,28 @@ const EventForm = ({ locationsAvailable, onEventCreated }) => {
             )}
           </div>
         </div>
+
         <div id='endFormCreateEvent'>
-          {' '}
           <div id='loadingIconEventDiv'>
-            {' '}
-            {loading ? (
+            {createEventMutation.isPending && (
               <LoadingIcon
                 text={'Uploading new event..'}
                 size={25}
                 borderSize={2}
                 classList='formLoading'
               />
-            ) : null}
+            )}
           </div>
           <div id='messagesEventDiv'>
             {success && (
               <p className='successMessage'>Event created successfully!</p>
             )}
-            {error && (
+            {createEventMutation.isError && (
               <p className='errorMessage'>
-                {error ===
+                {createEventMutation.error.message ===
                 `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`
                   ? 'Only the specified image formats are allowed.'
-                  : error}
+                  : createEventMutation.error.message}
               </p>
             )}
           </div>
@@ -241,6 +213,7 @@ const EventForm = ({ locationsAvailable, onEventCreated }) => {
               type='submit'
               text='Create event'
               className='createEventButton'
+              disabled={createEventMutation.isPending}
             />
           </div>
         </div>

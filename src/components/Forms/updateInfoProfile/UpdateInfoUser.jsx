@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import './UpdateInfoStyles.css'
 import { useForm } from 'react-hook-form'
-import { API } from '../../../utils/api/api'
 import { useAuthContext } from '../../../context/AuthContext'
 import Input from '../../UI/inputDOM/Input'
 import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 import { useNavigate } from 'react-router-dom'
+import { useUpdateUser } from '../../../utils/api/queries/users/useUpdateUser'
+import { useDeleteUser } from '../../../utils/api/queries/users/useDeleteUser'
+import DeleteMessage from '../../UI/deleteMessage/DeleteMessage'
 
 const UpdateInfoUser = ({ user }) => {
   const [error, setError] = useState('')
@@ -34,79 +36,55 @@ const UpdateInfoUser = ({ user }) => {
     }
   })
 
+  const updateUserMutation = useUpdateUser(token)
+  const deleteUserMutation = useDeleteUser(token)
+
   const onSubmit = async (values) => {
-    setError('')
-    setLoading(true)
     setSuccess(false)
 
-    try {
-      const formData = new FormData()
+    const formData = new FormData()
 
-      if (values.newPassword || values.password) {
-        if (values.newPassword !== values.password) {
-          setError('Passwords do not match')
-          setLoading(false)
-          return
-        }
-        if (values.password) {
-          formData.append('password', values.password)
-        }
+    if (values.newPassword || values.password) {
+      if (values.newPassword !== values.password) {
+        setError('Passwords do not match')
+        setLoading(false)
+        return
       }
-
-      Object.keys(values).forEach((key) => {
-        if (key !== 'newPassword' && key !== 'password') {
-          if (key === 'profileImgInput' && values[key]?.length > 0) {
-            formData.append('profileImg', values[key][0])
-          } else if (key !== 'profileImgInput' && values[key]) {
-            formData.append(key, values[key])
-          }
-        }
-      })
-
-      const result = await API({
-        endpoint: `/users/${user._id}`,
-        body: formData,
-        method: 'PATCH',
-        isJSON: false,
-        token: token
-      })
-
-      if (result.status === 200) {
-        setSuccess(true)
-        updateUser(result.data.user || result.data)
-      } else {
-        setError(result.data || 'Error updating profile')
+      if (values.password) {
+        formData.append('password', values.password)
       }
-    } catch (error) {
-      setError(error.message || 'Error updating profile')
-    } finally {
-      setLoading(false)
     }
+
+    Object.keys(values).forEach((key) => {
+      if (key !== 'newPassword' && key !== 'password') {
+        if (key === 'profileImgInput' && values[key]?.length > 0) {
+          formData.append('profileImg', values[key][0])
+        } else if (key !== 'profileImgInput' && values[key]) {
+          formData.append(key, values[key])
+        }
+      }
+    })
+
+    updateUserMutation.mutate(
+      { formData, userId: user._id },
+      {
+        onSuccess: (data) => {
+          setSuccess(true)
+          updateUser(data.user || data)
+        }
+      }
+    )
   }
 
   const handleDeleteAccount = async () => {
-    setError('')
-    setLoading(true)
     setSuccess(false)
 
-    try {
-      const result = await API({
-        endpoint: `/users/${user._id}`,
-        method: 'DELETE',
-        token: token
-      })
-
-      if (result.status === 200) {
+    deleteUserMutation.mutate(user._id, {
+      onSuccess: () => {
         setSuccess(true)
         navigate(-1)
-      } else {
-        setError(result.data || 'Error updating profile')
       }
-    } catch (error) {
-      setError(error.message || 'Error deleting profile')
-    } finally {
-      setLoading(false)
-    }
+    })
   }
 
   if (!user) {
@@ -251,17 +229,26 @@ const UpdateInfoUser = ({ user }) => {
           {success && (
             <p className='successMessageProfile'>Changes saved successfully!</p>
           )}
-          {error && (
-            <p className='errorMessageProfile'>
-              {error ===
-              `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`
+          {(error ||
+            updateUserMutation.isError ||
+            deleteUserMutation.isError) && (
+            <p className='errorMessage'>
+              {updateUserMutation.error?.message ===
+                `Unexpected token '<', "<!DOCTYPE "... is not valid JSON` ||
+              deleteUserMutation.error?.message ===
+                `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`
                 ? 'Only the specified image formats are allowed.'
-                : error}
+                : updateUserMutation.error?.message ||
+                  deleteUserMutation.error?.message}
             </p>
           )}
         </div>
         <div id='loadingIconDiv'>
-          {loading ? <LoadingIcon size={25} borderSize={2} /> : null}
+          {(loading ||
+            deleteUserMutation.isPending ||
+            updateUserMutation.isPending) && (
+            <LoadingIcon size={25} borderSize={2} />
+          )}
         </div>
         <div id='saveButtonDiv'>
           <Button

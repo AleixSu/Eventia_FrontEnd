@@ -1,43 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { API } from '../../../utils/api/api'
 import { useFilter } from '../../../context/FilterContext'
 import './FilterBox.css'
 import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
+import { useGetCountries } from '../../../utils/api/queries/locations/useGetCountries'
 
 const FilterBox = () => {
-  const [countries, setCountries] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
   const { selectedCountries, toggleCountry } = useFilter()
 
-  useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        setLoading(true)
-        const response = await API({ endpoint: '/locations/countries' })
+  const { data: countries = [], isLoading, isError, error } = useGetCountries()
 
-        if (response.status !== 200) {
-          throw new Error(
-            'An error has ocurred while trying to load the countries'
-          )
-        }
-
-        setCountries(response.data)
-      } catch (err) {
-        setError(err.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchCountries()
-  }, [])
-
-  if (loading)
+  if (isLoading) {
     return <LoadingIcon size={25} borderSize={2} text={'Loading filter...'} />
-  if (error) return <div className='error-text'>Error: {error}</div>
+  }
+
+  if (isError) {
+    return <div className='error-text'> Error: {error.message}</div>
+  }
 
   return (
     <div id='filterBox'>

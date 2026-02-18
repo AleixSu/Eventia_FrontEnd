@@ -96,12 +96,13 @@
   display: flex;
   align-items: center;
 }
-.confirmationEventText {
-  display: flex;
-  align-items: center;
+.assistanceMessagesDiv {
+  position: relative;
 }
+
 .confirmationEventText > p {
-  font-size: 15px;
+  font-size: 13px;
+  text-align: start;
 }
 
 #attendeesListDiv {

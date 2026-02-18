@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import './AttendeesList.css'
 import Button from '../../../UI/button/Button'
-import AttendeeCard from '../../../UI/card/attendeeCard/AttendeeCard'
-import { API } from '../../../../utils/api/api'
 import { useAuthContext } from '../../../../context/AuthContext'
 import AttendeesRoll from './AttendeesRoll'
 import LoadingIcon from '../../../UI/loadingIcon/LoadingIcon'
+import { useGetUserByNameOrNickname } from '../../../../utils/api/queries/users/useGetUserByNameOrNickname'
 
 const AttendeesList = ({ event }) => {
   const { token } = useAuthContext()
   const [searchQuery, setSearchQuery] = useState('')
-  const [error, setError] = useState('')
   const [foundAttendees, setFoundAttendees] = useState([])
   const [loading, setLoading] = useState(false)
+
+  const getUsersByNameOrNicknameMutation = useGetUserByNameOrNickname(token)
 
   const handleSearchInput = async (searchQuery) => {
     if (!searchQuery.trim()) {
@@ -20,31 +20,20 @@ const AttendeesList = ({ event }) => {
       return
     }
 
-    try {
-      setLoading(true)
-      const res = await API({
-        endpoint: '/users/getUsersByNameOrNickname',
-        method: 'POST',
-        body: {
-          searchQuery,
-          eventId: event._id
+    getUsersByNameOrNicknameMutation.mutate(
+      { searchQuery, eventId: event._id },
+      {
+        onSuccess: (data) => {
+          setFoundAttendees(data)
+          setLoading(false)
         },
-        token: token
-      })
-
-      if (res.status === 404) {
-        setFoundAttendees([])
-      } else if (res.status === 200) {
-        setFoundAttendees(res.data)
+        onError: () => {
+          setLoading(false)
+        }
       }
-    } catch (error) {
-      console.error('Error fetching attendees:', error)
-      setError(error.message)
-      setFoundAttendees([])
-    } finally {
-      setLoading(false)
-    }
+    )
   }
+  const [openAttendeeList, setOpenAtteendeeList] = useState(false)
 
   useEffect(() => {
     if (!openAttendeeList) return
@@ -54,9 +43,8 @@ const AttendeesList = ({ event }) => {
     }, 500)
 
     return () => clearTimeout(timeout)
-  }, [searchQuery])
+  }, [searchQuery, openAttendeeList])
 
-  const [openAttendeeList, setOpenAtteendeeList] = useState(false)
   return (
     <div id='attendeesListUser'>
       <h3 className='attendeesListTitle'>Who's Going</h3>
@@ -74,13 +62,11 @@ const AttendeesList = ({ event }) => {
           </div>
           <div id='attendeesCount'>
             <p>
-              {' '}
               {event.attendees.length === 0
-                ? 'Be the firsts to attend to this '
+                ? 'Be the first to attend to this event'
                 : event.attendees.length - 5 < 1
-                  ? `${event.attendees.length}`
-                  : `+ ${event.attendees.length - 5}`}{' '}
-              going{' '}
+                  ? `${event.attendees.length} going`
+                  : `+ ${event.attendees.length - 5} going`}
             </p>
           </div>
         </div>
@@ -126,7 +112,7 @@ const AttendeesList = ({ event }) => {
 
           {searchQuery.length === 0 ? (
             <AttendeesRoll attendees={event.attendees} />
-          ) : loading ? (
+          ) : loading || getUsersByNameOrNicknameMutation.isPending ? (
             <LoadingIcon size={50} borderSize={4} />
           ) : foundAttendees.length > 0 ? (
             <div className='attendeesRoll'>

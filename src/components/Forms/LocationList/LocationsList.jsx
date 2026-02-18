@@ -1,55 +1,23 @@
 // src/components/LocationsList/LocationsList.jsx
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import './LocationList.css'
-import { API } from '../../../utils/api/api'
 import LocationCard from '../../UI/card/locationCard/LocationCard'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
+import { useGetLocations } from '../../../utils/api/queries/locations/useGetLocations'
 
 const LocationsList = () => {
-  const [locations, setLocations] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const { data: locations = [], isLoading, isError, error } = useGetLocations()
 
-  useEffect(() => {
-    const fetchLocations = async () => {
-      setLoading(true)
-      setError(null)
-
-      try {
-        const response = await API({
-          endpoint: '/locations',
-          method: 'GET'
-        })
-
-        if (response.status === 404) {
-          setLocations([])
-        } else if (response.status === 200) {
-          setLocations(response.data)
-        } else {
-          throw new Error('Failed to load the locations')
-        }
-      } catch (err) {
-        console.error('Failed to load the locations:', err)
-        setError(err.message)
-        setLocations([])
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchLocations()
-  }, [])
-
-  if (loading) {
+  if (isLoading) {
     return (
       <LoadingIcon size={50} borderSize={4} text={'Loading locations...'} />
     )
   }
 
-  if (error) {
+  if (isError) {
     return (
       <div className='locationsError'>
-        <p>Error: {error}</p>
+        <p>Error: {error.message}</p>
       </div>
     )
   }
@@ -66,7 +34,7 @@ const LocationsList = () => {
             <h5>
               {locations.length}{' '}
               {locations.length === 1
-                ? 'Locations available'
+                ? 'Location available'
                 : 'Locations available'}
             </h5>
           </div>

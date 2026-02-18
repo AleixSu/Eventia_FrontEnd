@@ -1,17 +1,15 @@
 import React, { useState } from 'react'
 import './LocationForm.css'
 import { useAuthContext } from '../../../context/AuthContext'
-import { API } from '../../../utils/api/api'
 import { useForm } from 'react-hook-form'
 import Input from '../../UI/inputDOM/Input'
 import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
+import { useCreateLocation } from '../../../utils/api/queries/locations/useCreateLocation'
 
-const LocationForm = ({ onLocationCreated }) => {
-  const [error, setError] = useState('')
+const LocationForm = () => {
   const [hiddenForm, setHiddenForm] = useState(false)
   const [success, setSuccess] = useState(false)
-  const [loading, setLoading] = useState(false)
   const { token } = useAuthContext()
 
   const { handleSubmit, register, formState, reset } = useForm({
@@ -20,10 +18,10 @@ const LocationForm = ({ onLocationCreated }) => {
     }
   })
 
+  const createLocationMutation = useCreateLocation(token)
+
   const onSubmit = async (values) => {
-    setError('')
     setSuccess(false)
-    setLoading(true)
 
     const formData = new FormData()
 
@@ -35,37 +33,13 @@ const LocationForm = ({ onLocationCreated }) => {
       }
     })
 
-    try {
-      const result = await API({
-        endpoint: '/locations/',
-        body: formData,
-        method: 'POST',
-        isJSON: false,
-        token: token
-      })
-
-      if (result.status === 201 || result.status === 200) {
+    createLocationMutation.mutate(formData, {
+      onSuccess: () => {
         setSuccess(true)
         reset()
         setTimeout(() => setSuccess(false), 3000)
-        setLoading(false)
-        onLocationCreated() //Recibe la función desde el padre para que cada vez que creemos una localización se active la función y haga un fetch de las localizaciones en el padre (adminArea)
-      } else {
-        const errorMsg =
-          result.data?.error ||
-          result.data?.message ||
-          JSON.stringify(result.data) ||
-          'Error uploading new location'
-
-        setError(errorMsg)
-        setLoading(false)
       }
-    } catch (err) {
-      setError(err.message || 'Error creating location')
-      setLoading(false)
-    } finally {
-      setLoading(false)
-    }
+    })
   }
 
   return (
@@ -104,25 +78,25 @@ const LocationForm = ({ onLocationCreated }) => {
         </div>
         <div id='endFormLocation'>
           <div id='loadingIconLocationDiv'>
-            {loading ? (
+            {createLocationMutation.isPending && (
               <LoadingIcon
                 text={'Uploading new location..'}
                 size={25}
                 borderSize={2}
                 classList='formLoading'
               />
-            ) : null}
+            )}
           </div>
           <div id='messagesLocationDiv'>
             {success && (
               <p className='successMessage'>Location created successfully!</p>
             )}
-            {error && (
+            {createLocationMutation.isError && (
               <p className='errorMessage'>
-                {error ===
+                {createLocationMutation.error.message ===
                 `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`
                   ? 'Only the specified image formats are allowed.'
-                  : error}
+                  : createLocationMutation.error.message}
               </p>
             )}
           </div>
@@ -131,6 +105,7 @@ const LocationForm = ({ onLocationCreated }) => {
               type='submit'
               text='Create location'
               className='createLocationButton'
+              disabled={createLocationMutation.isPending}
             />
           </div>
         </div>

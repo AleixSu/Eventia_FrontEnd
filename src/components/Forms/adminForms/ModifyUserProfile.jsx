@@ -1,19 +1,15 @@
 import React, { useState } from 'react'
-import { API } from '../../../utils/api/api'
 import Input from '../../UI/inputDOM/Input'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
 import './ModifyUserProfile.css'
 import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 import { useAuthContext } from '../../../context/AuthContext'
+import { useModifyUserProfile } from '../../../utils/api/queries/users/useModifyUserProfile'
 
 const ModifyUserProfile = () => {
-  const [error, setError] = useState('')
   const [hiddenForm, setHiddenForm] = useState(false)
-  const [loading, setLoading] = useState(false)
   const { token } = useAuthContext()
-  const navigate = useNavigate()
 
   const { handleSubmit, register, formState, reset } = useForm({
     defaultValues: {
@@ -22,42 +18,15 @@ const ModifyUserProfile = () => {
     }
   })
 
+  const modifyUserProfileMutation = useModifyUserProfile(token)
+
   const onSubmit = async (values) => {
-    setError('')
-    setLoading(true)
-
     const body = { email: values.email, nickName: values.nickName }
-
-    try {
-      const result = await API({
-        endpoint: `/users/getUserByEmail`,
-        body: body,
-        method: 'POST',
-        token: token
-      })
-      if (result.status === 201 || result.status === 200) {
+    modifyUserProfileMutation.mutate(body, {
+      onSuccess: () => {
         reset()
-        setTimeout(() => {
-          navigate(`/admin_area/edit_user/${result.data._id}`, {
-            state: { user: result.data }
-          })
-        }, 500)
-      } else {
-        const errorMsg =
-          result.data?.error ||
-          result.data?.message ||
-          JSON.stringify(result.data) ||
-          'Error fetching the user'
-
-        setError(errorMsg)
-        setLoading(false)
       }
-    } catch (error) {
-      setError(error.message || 'Error fetching the user')
-      setLoading(false)
-    } finally {
-      setLoading(false)
-    }
+    })
   }
 
   return (
@@ -93,23 +62,28 @@ const ModifyUserProfile = () => {
         <div id='endFormModifyUser'>
           <div id='loadingIconModifyUserDiv'>
             {' '}
-            {loading ? (
+            {modifyUserProfileMutation.isPending ?? (
               <LoadingIcon
                 text={'Getting user info...'}
                 size={25}
                 borderSize={2}
                 classList='formLoading'
               />
-            ) : null}
+            )}
           </div>
           <div id='messagesModifyUserDiv'>
-            {error && <p className='errorMessage'>{error}</p>}
+            {modifyUserProfileMutation.isError && (
+              <p className='errorMessage'>
+                {modifyUserProfileMutation.error.message}
+              </p>
+            )}
           </div>
           <div id='modifyUserButtonDiv'>
             <Button
               type='submit'
               text='Get user profile'
               className='modifyUserButton'
+              disabled={modifyUserProfileMutation.isPending}
             />
           </div>
         </div>

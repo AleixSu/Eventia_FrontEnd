@@ -7,12 +7,11 @@ import DeleteMessage from '../../UI/deleteMessage/DeleteMessage'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 import './UpdateLocationInfo.css'
 import { useNavigate } from 'react-router-dom'
-import { API } from '../../../utils/api/api'
+import { useUpdateLocation } from '../../../utils/api/queries/locations/useUpdateLocation'
+import { useDeleteLocation } from '../../../utils/api/queries/locations/useDeleteLocation'
 
 const UpdateLocationInfo = ({ location }) => {
-  const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
-  const [loading, setLoading] = useState(false)
   const [deleteButton, setDeleteButton] = useState(false)
   const [currentLocation, setCurrentLocation] = useState(location)
   const { token } = useAuthContext()
@@ -24,6 +23,9 @@ const UpdateLocationInfo = ({ location }) => {
     }
   })
 
+  const updateLocationMutation = useUpdateLocation(token)
+  const deleteLocationMutation = useDeleteLocation(token)
+
   useEffect(() => {
     setCurrentLocation(location)
 
@@ -31,9 +33,7 @@ const UpdateLocationInfo = ({ location }) => {
   }, [location, setValue])
 
   const onSubmit = async (values) => {
-    setError('')
     setSuccess(false)
-    setLoading(true)
 
     const formData = new FormData()
 
@@ -45,64 +45,30 @@ const UpdateLocationInfo = ({ location }) => {
       }
     })
 
-    try {
-      const result = await API({
-        endpoint: `/locations/${location._id}`,
-        body: formData,
-        method: 'PATCH',
-        isJSON: false,
-        token: token
-      })
-
-      if (result.status === 201 || result.status === 200) {
-        setSuccess(true)
-        setCurrentLocation(result.data)
-        setValue('country', result.data.country)
-        setTimeout(() => setSuccess(false), 3000)
-        setLoading(false)
-      } else {
-        const errorMsg =
-          result.data?.error ||
-          result.data?.message ||
-          JSON.stringify(result.data) ||
-          'Error uploading new location'
-
-        setError(errorMsg)
-        setLoading(false)
+    updateLocationMutation.mutate(
+      { formData, locationId: location._id },
+      {
+        onSuccess: (data) => {
+          setSuccess(true)
+          setCurrentLocation(data)
+          setValue('country', data.country)
+          setTimeout(() => setSuccess(false), 3000)
+        }
       }
-    } catch (err) {
-      setError(err.message || 'Error creating location')
-      setLoading(false)
-    } finally {
-      setLoading(false)
-    }
+    )
   }
 
   const handleDeleteLocation = async () => {
-    setError('')
-    setLoading(true)
     setSuccess(false)
 
-    try {
-      const result = await API({
-        endpoint: `/locations/${location._id}`,
-        method: 'DELETE',
-        token: token
-      })
-
-      if (result.status === 200) {
+    deleteLocationMutation.mutate(location._id, {
+      onSuccess: (data) => {
         setSuccess(true)
         setTimeout(() => {
           navigate(-1)
         }, 1000)
-      } else {
-        setError(result.data || 'Error deleting location')
       }
-    } catch (error) {
-      setError(error.message || 'Error deleting location')
-    } finally {
-      setLoading(false)
-    }
+    })
   }
 
   return (
@@ -152,25 +118,25 @@ const UpdateLocationInfo = ({ location }) => {
         </div>
         <div id='endFormModifyLocation'>
           <div id='loadingIconModifyLocationDiv'>
-            {loading ? (
-              <LoadingIcon
-                text={'Uploading new location..'}
-                size={25}
-                borderSize={2}
-                classList='formLoading'
-              />
-            ) : null}
+            {(deleteLocationMutation.isPending ||
+              updateLocationMutation.isPending) && (
+              <LoadingIcon size={25} borderSize={2} />
+            )}
           </div>
           <div id='messagesModifyLocationDiv'>
             {success && (
               <p className='successMessage'>Location modified successfully!</p>
             )}
-            {error && (
+            {(updateLocationMutation.isError ||
+              deleteLocationMutation.isError) && (
               <p className='errorMessage'>
-                {error ===
-                `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`
+                {updateLocationMutation.error?.message ===
+                  `Unexpected token '<', "<!DOCTYPE "... is not valid JSON` ||
+                deleteLocationMutation.error?.message ===
+                  `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`
                   ? 'Only the specified image formats are allowed.'
-                  : error}
+                  : updateLocationMutation.error?.message ||
+                    deleteLocationMutation.error?.message}
               </p>
             )}
           </div>

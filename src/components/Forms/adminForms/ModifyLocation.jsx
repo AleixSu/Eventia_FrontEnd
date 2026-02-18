@@ -1,19 +1,16 @@
 import './ModifyLocation.css'
 import React, { useState } from 'react'
 import { API } from '../../../utils/api/api'
-import Input from '../../UI/inputDOM/Input'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 import { useAuthContext } from '../../../context/AuthContext'
+import { useModifyLocation } from '../../../utils/api/queries/locations/useModifyLocation'
 
 const ModifyLocation = ({ locationsAvailable }) => {
-  const [error, setError] = useState('')
   const [hiddenForm, setHiddenForm] = useState(false)
-  const [loading, setLoading] = useState(false)
   const { token } = useAuthContext()
-  const navigate = useNavigate()
 
   const { handleSubmit, register, formState, reset } = useForm({
     defaultValues: {
@@ -21,13 +18,17 @@ const ModifyLocation = ({ locationsAvailable }) => {
     }
   })
 
+  const modifyLocationMutation = useModifyLocation(token)
+
   const onSubmit = async (values) => {
-    setError('')
-    setLoading(true)
-    console.log(values.locationCountry)
-
     const body = { country: values.locationCountry }
+    modifyLocationMutation.mutate(body, {
+      onSuccess: () => {
+        reset()
+      }
+    })
 
+    /*
     try {
       const result = await API({
         endpoint: `/locations/getLocationByName`,
@@ -56,8 +57,7 @@ const ModifyLocation = ({ locationsAvailable }) => {
       setError(error.message || 'Error fetching the location')
       setLoading(false)
     } finally {
-      setLoading(false)
-    }
+      setLoading(false) */
   }
 
   return (
@@ -102,24 +102,29 @@ const ModifyLocation = ({ locationsAvailable }) => {
           {' '}
           <div id='loadingIconModifyLocationDiv'>
             {' '}
-            {loading ? (
+            {modifyLocationMutation.isPending && (
               <LoadingIcon
                 text={'Getting Location info...'}
                 size={25}
                 borderSize={2}
                 classList='formLoading'
               />
-            ) : null}
+            )}
           </div>
           <div id='messagesModifyLocationDiv'>
             {' '}
-            {error && <p className='errorMessage'>{error}</p>}
+            {modifyLocationMutation.isError && (
+              <p className='errorMessage'>
+                {modifyLocationMutation.error.message}
+              </p>
+            )}
           </div>
           <div id='modifyLocationButtonDiv'>
             <Button
               type='submit'
               text='Get Location'
               className='modifyLocationButton'
+              disabled={modifyLocationMutation.isPending}
             />
           </div>
         </div>

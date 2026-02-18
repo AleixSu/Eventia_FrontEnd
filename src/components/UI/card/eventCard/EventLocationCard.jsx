@@ -13,6 +13,7 @@ const EventLocationCard = ({ event }) => {
 
   const handleClick = () => {
     navigate(`/Events/Event/${event._id}`, { state: { event } })
+    console.log(event)
   }
 
   const cardStyle = {

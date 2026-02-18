@@ -1,40 +1,32 @@
-import React, { useEffect, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import Button from '../../components/UI/button/Button'
 import Card from '../../components/UI/card/homeCard/Card'
 import { homeSrc, homeText } from '../../constants/homeConstants'
 import './Home.css'
 import { useModalContext } from '../../context/ModalContext'
 import { useAuthContext } from '../../context/AuthContext'
-import { API } from '../../utils/api/api'
 import NoUserDOM from '../../components/Forms/homeElements/NoUserDOM'
 import UserDom from '../../components/Forms/homeElements/UserDom'
 import { Helmet } from 'react-helmet-async'
+import { useGetEvents } from '../../utils/api/queries/events/useGetEvents'
 
 const Home = () => {
   const { openLogin } = useModalContext()
   const { user } = useAuthContext()
-  const [randomEvents, setRandomEvents] = useState([])
-  const [numberOfEvents, setNumberOfEvents] = useState('')
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      if (user) {
-        const result = await API({
-          endpoint: '/events',
-          method: 'GET'
-        })
+  const { data: events = [] } = useGetEvents(!!user)
 
-        let threeRandomEvents = []
-        for (let i = 0; i < 3; i++) {
-          const index = Math.floor(Math.random() * result.data.length)
-          threeRandomEvents.push(result.data[index])
-        }
-        setNumberOfEvents(result.data.length)
-        setRandomEvents(threeRandomEvents)
-      }
+  const randomEvents = useMemo(() => {
+    if (!events.length) return []
+
+    const threeRandomEvents = []
+    for (let i = 0; i < 3; i++) {
+      const index = Math.floor(Math.random() * events.length)
+      threeRandomEvents.push(events[index])
     }
-    fetchEvents()
-  }, [user])
+
+    return threeRandomEvents
+  }, [events])
 
   return (
     <>
@@ -69,6 +61,7 @@ const Home = () => {
                   behavior: 'smooth',
                   block: 'start'
                 })
+                console.log(events.data)
               }}
             />
           </div>
@@ -91,7 +84,7 @@ const Home = () => {
               <p>{homeText.introText} </p>
             </div>
             {user ? (
-              <UserDom events={randomEvents} eventsNumber={numberOfEvents} />
+              <UserDom events={randomEvents} eventsNumber={events.length} />
             ) : (
               <NoUserDOM fnc={openLogin} />
             )}

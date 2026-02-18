@@ -1,19 +1,16 @@
 import './ModifyEvent.css'
 import React, { useState } from 'react'
 import { API } from '../../../utils/api/api'
-import Input from '../../UI/inputDOM/Input'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import Button from '../../UI/button/Button'
 import LoadingIcon from '../../UI/loadingIcon/LoadingIcon'
 import { useAuthContext } from '../../../context/AuthContext'
+import { useModifyEvent } from '../../../utils/api/queries/events/useModifyEvent'
 
 const ModifyEvent = ({ eventsNames }) => {
-  const [error, setError] = useState('')
-  const [hiddenForm, setHiddenForm] = useState(false)
-  const [loading, setLoading] = useState(false)
   const { token } = useAuthContext()
-  const navigate = useNavigate()
+  const [hiddenForm, setHiddenForm] = useState(false)
 
   const { handleSubmit, register, formState, reset } = useForm({
     defaultValues: {
@@ -21,44 +18,15 @@ const ModifyEvent = ({ eventsNames }) => {
     }
   })
 
-  const onSubmit = async (values) => {
-    setError('')
-    setLoading(true)
+  const modifyEventMutation = useModifyEvent(token)
 
+  const onSubmit = (values) => {
     const body = { eventName: values.eventName }
-
-    try {
-      const result = await API({
-        endpoint: `/events/getEventByName`,
-        body: body,
-        method: 'POST',
-        token: token
-      })
-      console.log(values.eventName)
-
-      if (result.status === 201 || result.status === 200) {
+    modifyEventMutation.mutate(body, {
+      onSuccess: () => {
         reset()
-        setTimeout(() => {
-          navigate(`/admin_area/edit_event/${result.data._id}`, {
-            state: { event: result.data }
-          })
-        }, 500)
-      } else {
-        const errorMsg =
-          result.data?.error ||
-          result.data?.message ||
-          JSON.stringify(result.data) ||
-          'Error fetching the event'
-
-        setError(errorMsg)
-        setLoading(false)
       }
-    } catch (error) {
-      setError(error.message || 'Error fetching the event')
-      setLoading(false)
-    } finally {
-      setLoading(false)
-    }
+    })
   }
 
   return (
@@ -103,24 +71,29 @@ const ModifyEvent = ({ eventsNames }) => {
           {' '}
           <div id='loadingIconModifyEventDiv'>
             {' '}
-            {loading ? (
+            {modifyEventMutation.isPending && (
               <LoadingIcon
                 text={'Getting Event info...'}
                 size={25}
                 borderSize={2}
                 classList='formLoading'
               />
-            ) : null}
+            )}
           </div>
           <div id='messagesModifyEventDiv'>
             {' '}
-            {error && <p className='errorMessage'>{error}</p>}
+            {modifyEventMutation.isError && (
+              <p className='errorMessage'>
+                {modifyEventMutation.error.message}
+              </p>
+            )}
           </div>
           <div id='modifyEventButtonDiv'>
             <Button
               type='submit'
               text='Get Event'
               className='modifyEventButton'
+              disabled={modifyEventMutation.isPending}
             />
           </div>
         </div>
