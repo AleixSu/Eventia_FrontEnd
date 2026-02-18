@@ -41,12 +41,14 @@ npm install
 
 ```env
 VITE_API_URL=http://localhost:3000/api/v1
+VITE_APP_URL=http://localhost:5173
 ```
 
 Para producción, usa la URL de tu backend desplegado:
 
 ```env
 VITE_API_URL=https://tu-backend.onrender.com/api/v1
+VITE_APP_URL=https://tu-dominio.vercel.app
 ```
 
 ### 5. Inicia servidor de desarrollo:
@@ -74,30 +76,51 @@ npm run preview
 ## Estructura del proyecto
 
 ```
-frontend/
-├── public/
-│   └── images/           # Imágenes estáticas
-├── src/
-│   ├── assets/           # Recursos (logos, iconos)
-│   ├── components/       # Componentes reutilizables
-│   │   ├── Layout/       # Header, Footer, Banner
-│   │   └── UI/           # Inputs, Buttons, Cards
-│   ├── constants/        # Constantes (rutas de imágenes, etc.)
-│   ├── context/          # Context API (AuthContext)
-│   ├── pages/            # Páginas principales
-│   │   ├── Home/
-│   │   ├── Events/
-│   │   ├── Locations/
-│   │   ├── MyProfile/
-│   │   ├── Login/
-│   │   └── Register/
-│   ├── utils/            # Utilidades (API, helpers)
-│   ├── App.jsx           # Componente principal
-│   ├── main.jsx          # Punto de entrada
-│   └── index.css         # Estilos globales
-├── .env                  # Variables de entorno
-├── vite.config.js        # Configuración de Vite
-└── package.json
+src/
+├── components/
+│   ├── Forms/
+│   │   ├── adminForms/
+│   │   ├── eventComponents/
+│   │   │   └── attendeesList/
+│   │   ├── EventsList/
+│   │   ├── filterBox/
+│   │   ├── homeElements/
+│   │   ├── LocationList/
+│   │   ├── loginRegisterForms/
+│   │   ├── searchBox/
+│   │   ├── updateEventInfo/
+│   │   ├── updateInfoProfile/
+│   │   └── updateLocationInfo/
+│   ├── Layout/
+│   │   ├── banner/
+│   │   └── header/
+│   └── UI/
+│       ├── button/
+│       ├── card/
+│       ├── deleteMessage/
+│       ├── inputDOM/
+│       └── loadingIcon/
+├── constants/
+├── context/
+├── pages/
+│   ├── adminArea/
+│   ├── event/
+│   ├── home/
+│   ├── location/
+│   ├── loginRegister/
+│   ├── myProfile/
+│   └── RouteNotFound/
+├── utils/
+│   ├── api/
+│   │   ├── queries/       # Hooks de TanStack Query por endpoint
+│   │   └── api.js         # Utilidad centralizada de fetch
+│   └── Hooks/             # Custom hooks reutilizables
+│       ├── useDebounce.jsx
+│       └── useScrollToTop.jsx
+├── App.jsx
+├── App.css
+├── main.jsx
+└── index.css
 ```
 
 ---
@@ -140,6 +163,7 @@ frontend/
 - ✅ Mensajes de éxito/error
 - ✅ Loading states
 - ✅ Imágenes optimizadas con Cloudinary
+- ✅ SEO por página con React Helmet Async
 
 ---
 
@@ -151,10 +175,15 @@ frontend/
 - **Vite** - Build tool y dev server
 - **React Router DOM** - Enrutamiento
 
-### Gestión de estado
+### Gestión de estado y datos
 
 - **Context API** - Estado global (autenticación)
+- **TanStack Query** - Fetching, caché y sincronización del estado del servidor
 - **React Hook Form** - Manejo de formularios
+
+### SEO
+
+- **React Helmet Async** - Gestión dinámica de metadatos por página
 
 ### Estilos
 
@@ -163,7 +192,6 @@ frontend/
 
 ### Otras
 
-- **Fetch API** - Peticiones HTTP
 - **localStorage** - Persistencia de token
 
 ---
@@ -181,23 +209,104 @@ El proyecto usa **Context API** para manejar el estado de autenticación:
 - logIn(email, password): Función de login
 - registerUser(nickName, email, password): Función de registro
 - logOut(): Función de logout
+- updateUser(updatedUserData): Actualiza el usuario en contexto
 ```
 
 ---
 
-## API Integration
+## API Integration — TanStack Query
 
-La aplicación se comunica con el backend mediante una utilidad centralizada:
+Toda la capa de fetching está implementada con **TanStack Query**, eliminando el patrón manual de `useEffect` + `useState` para gestionar estado del servidor.
+
+Cada endpoint tiene su propio hook en `utils/api/queries/`, separados por dominio (`events`, `users`, `locations`):
+
+- `useQuery` para operaciones de lectura (GET), con caché automática y revalidación en segundo plano.
+- `useMutation` para operaciones de escritura (POST, PATCH, DELETE), con `queryClient.invalidateQueries` para mantener los datos sincronizados tras cada mutación.
+- Los estados `isPending`, `isError` e `isSuccess` sustituyen por completo el estado local vinculado al servidor.
 
 ```javascript
-// utils/api/api.js
+// Ejemplo de hook de query — utils/api/queries/events/useGetEvents.js
+const useGetEvents = () => {
+  return useQuery({
+    queryKey: ['events'],
+    queryFn: () => API({ endpoint: '/events', method: 'GET' })
+  })
+}
+
+// Ejemplo de hook de mutación — utils/api/queries/events/useCreateEvent.js
+const useCreateEvent = (token) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (formData) =>
+      API({ endpoint: '/events', method: 'POST', body: formData, token }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['events'] })
+  })
+}
+```
+
+La utilidad centralizada de fetch se mantiene en `utils/api/api.js`:
+
+```javascript
 API({
   endpoint: '/users/login',
   method: 'POST',
   body: { email, password },
-  isJSON: true,
   token: 'optional-token'
 })
+```
+
+El `QueryClient` está configurado globalmente en `main.jsx` con `refetchOnWindowFocus: false` para evitar refetches innecesarios al cambiar de pestaña.
+
+---
+
+## SEO — React Helmet Async
+
+El SEO se gestiona con **React Helmet Async**, con metadata definida individualmente en cada página.
+
+- Cada página define su propio `<title>`, `<meta name="description">` y `<link rel="canonical">`.
+- Las páginas privadas (perfil, admin) incluyen directivas `noindex, nofollow` para evitar su indexación.
+- Los metadatos se actualizan dinámicamente en cada cambio de ruta.
+
+```jsx
+<Helmet>
+  <title>EventHub — Discover Events</title>
+  <meta name="description" content="Find and join events near you." />
+  <link rel="canonical" href={`${import.meta.env.VITE_APP_URL}/events`} />
+</Helmet>
+
+// Páginas privadas
+<Helmet>
+  <meta name="robots" content="noindex, nofollow" />
+</Helmet>
+```
+
+---
+
+## Custom Hooks
+
+La lógica reutilizable está centralizada en `utils/Hooks/`:
+
+**`useDebounce(value, delay)`**
+Retrasa la actualización de un valor hasta que el usuario deja de escribir. Usado en el buscador de asistentes para evitar peticiones en cada tecla.
+
+```javascript
+const debouncedSearch = useDebounce(searchQuery, 500)
+
+useEffect(() => {
+  if (!debouncedSearch.trim()) return
+  searchMutation.mutate({ searchQuery: debouncedSearch })
+}, [debouncedSearch])
+```
+
+**`useScrollToTop()`**
+Escucha los cambios de ruta mediante `useLocation` y hace scroll al inicio de la página en cada navegación. Montado directamente en `App.jsx`.
+
+```javascript
+// App.jsx
+function App() {
+  useScrollToTop()
+  return (...)
+}
 ```
 
 ---
@@ -232,11 +341,10 @@ Definida en `index.css` mediante CSS Custom Properties:
 3. Ejecuta `npm run dev`
 4. Prueba las siguientes rutas:
    - `/` - Home
-   - `/events` - Listado de eventos
-   - `/locations` - Localizaciones
-   - `/login` - Iniciar sesión
-   - `/register` - Registro
+   - `/Events` - Listado de eventos
+   - `/Locations` - Localizaciones
    - `/profile` - Perfil (requiere autenticación)
+   - `/admin_area` - Panel de administración (requiere rol admin)
 
 ---
 
@@ -250,6 +358,7 @@ Definida en `index.css` mediante CSS Custom Properties:
 4. Configura las variables de entorno:
    ```
    VITE_API_URL=https://tu-backend.onrender.com/api/v1
+   VITE_APP_URL=https://tu-dominio.vercel.app
    ```
 5. Deploy automático
 
@@ -266,9 +375,11 @@ Definida en `index.css` mediante CSS Custom Properties:
 ```env
 # Desarrollo
 VITE_API_URL=http://localhost:3000/api/v1
+VITE_APP_URL=http://localhost:5173
 
 # Producción
 VITE_API_URL=https://tu-backend-production.onrender.com/api/v1
+VITE_APP_URL=https://tu-dominio.vercel.app
 ```
 
 **Nota:** Las variables deben empezar con `VITE_` para ser accesibles en Vite.
@@ -292,11 +403,16 @@ VITE_API_URL=https://tu-backend-production.onrender.com/api/v1
 - Verifica la configuración de Cloudinary
 - Asegúrate de que las URLs de las imágenes sean correctas
 
+### Canonical URL indefinida
+
+- Asegúrate de que `VITE_APP_URL` esté definida tanto en `.env` local como en las variables de entorno de Vercel
+- Sin esta variable el canonical se renderizará como `undefined/ruta`
+
 ---
 
 ## Autor
 
-**Aleix Suero Corral**  
+**Aleix Suero Corral**
 GitHub: [@AleixSu](https://github.com/AleixSu/)
 
 ---
