@@ -13,40 +13,31 @@ export const useAuthContext = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
-  const [token, setToken] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const initializeAuth = async () => {
-      const storedToken = localStorage.getItem('token')
-      const storedUserId = localStorage.getItem('userId')
+      try {
+        const result = await API({
+          endpoint: '/users/profile',
+          method: 'GET'
+        })
 
-      if (storedToken && storedUserId) {
-        setToken(storedToken)
-
-        try {
-          const result = await API({
-            endpoint: `/users/${storedUserId}`,
-            method: 'GET',
-            token: storedToken
-          })
-
-          if (result.status === 200) {
-            setUser(result.data)
-            setIsAuthenticated(true)
-          } else {
-            localStorage.removeItem('token')
-            localStorage.removeItem('userId')
-            setToken(null)
-          }
-        } catch (error) {
-          console.error('Error fetching user:', error)
-          localStorage.removeItem('token')
-          localStorage.removeItem('userId')
-          setToken(null)
+        if (result.status === 200) {
+          setUser(result.data)
+          setIsAuthenticated(true)
+        } else {
+          setUser(null)
+          setIsAuthenticated(false)
         }
+      } catch (error) {
+        console.error('Error fetching profile:', error)
+
+        setUser(null)
+        setIsAuthenticated(false)
       }
+
       setLoading(false)
     }
 
@@ -65,9 +56,7 @@ export const AuthProvider = ({ children }) => {
         throw new Error(response.data.message || 'Email or password incorrect!')
       }
       setUser(response.data.user)
-      setToken(response.data.token)
       setIsAuthenticated(true)
-      localStorage.setItem('token', response.data.token)
       localStorage.setItem('userId', response.data.user._id)
       window.scrollTo(0, 0)
 
@@ -89,15 +78,6 @@ export const AuthProvider = ({ children }) => {
         const errorMessage = response.data || 'Registration failed'
         throw new Error(errorMessage.error)
       }
-      console.log(response.data)
-
-      setUser(response.data.user)
-      console.log(user)
-      setToken(response.data.token)
-      setIsAuthenticated(true)
-      localStorage.setItem('token', response.data.token)
-      localStorage.setItem('userId', response.data._id)
-      window.scrollTo(0, 0)
 
       return { success: true }
     } catch (error) {
@@ -109,11 +89,13 @@ export const AuthProvider = ({ children }) => {
     setUser(updatedUserData)
   }
 
-  const logOut = () => {
+  const logOut = async () => {
+    await API({
+      endpoint: '/users/logout',
+      method: 'POST'
+    })
     setUser(null)
-    setToken(null)
     setIsAuthenticated(false)
-    localStorage.removeItem('token')
     localStorage.removeItem('userId')
     window.scrollTo(0, 0)
   }
@@ -122,7 +104,6 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
-        token,
         isAuthenticated,
         loading,
         logIn,
