@@ -9,10 +9,10 @@ Interfaz responsive que consume la API REST de EventHub, permitiendo registro de
 ## Aplicación desplegada
 
 Frontend (Vercel):
-https://project13-final-project-front-end.vercel.app/
+https://eventiafest.vercel.app/
 
 Repositorio Backend:
-https://github.com/AleixSu/Project13.Final_Project_BackEnd
+https://github.com/AleixSu/Eventia_BackEnd
 
 Backend desplegado (Render):
 https://eventhub-backend-7hna.onrender.com
@@ -130,9 +130,10 @@ src/
 ### Autenticación
 
 - ✅ Registro de usuarios con validación
-- ✅ Login con JWT
+- ✅ Login mediante JWT almacenado en cookies httpOnly
+- ✅ Persistencia de sesión automática
 - ✅ Protección de rutas privadas
-- ✅ Logout
+- ✅ Logout seguro
 
 ### Perfil de usuario
 
@@ -192,18 +193,21 @@ src/
 
 ### Otras
 
-- **localStorage** - Persistencia de token
+- **Cookies httpOnly** - Persistencia segura de sesión JWT
 
 ---
 
 ## Autenticación y Context
 
-El proyecto usa **Context API** para manejar el estado de autenticación:
+El proyecto usa **Context API** para manejar el estado global de autenticación.
+
+La autenticación funciona mediante cookies `httpOnly` enviadas automáticamente por el navegador en cada petición gracias a `credentials: 'include'`.
+
+El frontend nunca tiene acceso directo al JWT, aumentando la seguridad frente a ataques XSS.
 
 ```javascript
 // AuthContext proporciona:
 - user: Datos del usuario autenticado
-- token: JWT token
 - isAuthenticated: Boolean
 - loading: Boolean para estados de carga
 - logIn(email, password): Función de login
@@ -211,6 +215,14 @@ El proyecto usa **Context API** para manejar el estado de autenticación:
 - logOut(): Función de logout
 - updateUser(updatedUserData): Actualiza el usuario en contexto
 ```
+
+Al cargar la aplicación, el contexto realiza automáticamente una petición a:
+
+```javascript
+GET /users/profile
+```
+
+Si la cookie JWT es válida, el backend devuelve el usuario autenticado y restaura la sesión automáticamente.
 
 ---
 
@@ -250,8 +262,7 @@ La utilidad centralizada de fetch se mantiene en `utils/api/api.js`:
 API({
   endpoint: '/users/login',
   method: 'POST',
-  body: { email, password },
-  token: 'optional-token'
+  body: { email, password }
 })
 ```
 
@@ -392,11 +403,6 @@ VITE_APP_URL=https://tu-dominio.vercel.app
 
 - Asegúrate de que el backend tenga configurado CORS correctamente
 - Verifica que la URL del API sea la correcta
-
-### Token expirado
-
-- El token JWT tiene una duración limitada
-- Implementa refresh token o relogin automático
 
 ### Imágenes no cargan
 
