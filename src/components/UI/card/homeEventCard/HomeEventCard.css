@@ -7,7 +7,8 @@
   background-color: rgb(37, 37, 37);
   border-radius: 1rem;
   overflow: hidden;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
 }
@@ -54,6 +55,7 @@
 
 .event-card-content {
   padding: 1rem;
+  padding-bottom: 0.7rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -93,4 +95,48 @@
 
 .event-card-button:hover {
   opacity: 0.7;
+}
+
+@media (max-width: 470px) {
+  .event-card {
+    width: 100%;
+    border-radius: var(--radius-sm);
+  }
+
+  .event-card-image-wrapper {
+    height: 6rem;
+  }
+
+  .event-card-title-wrapper {
+    bottom: 0.5rem;
+    left: 0.5rem;
+    right: 0.5rem;
+  }
+
+  .event-card-title {
+    font-size: var(--font-size-xs);
+  }
+
+  .event-card-content {
+    gap: 0.35rem;
+  }
+
+  .event-card-button {
+    width: 65%;
+    background: linear-gradient(
+      to right,
+      var(--color-keyWord-primary),
+      var(--color-keyWord-terciary)
+    );
+    margin: auto;
+    margin-top: 5px;
+    color: var(--color-bg);
+    padding: 0.4rem;
+    border-radius: var(--radius-xs);
+    font-size: var(--font-size-xxs);
+  }
+
+  .event-card-button:hover {
+    opacity: 0.7;
+  }
 }

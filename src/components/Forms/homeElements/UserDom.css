@@ -80,3 +80,48 @@
   color: #fbbf24;
   transform: scale(1.02);
 }
+
+@media (max-width: 470px) {
+  #userDomDiv {
+    margin-top: 25px;
+    border-radius: var(--radius-sm);
+    padding: 15px;
+  }
+  #wellcome {
+    margin: 25px 0px;
+  }
+
+  #browseDiv p {
+    color: var(--color-bg);
+    font-size: var(--font-size-xxs);
+    text-align: center;
+  }
+
+  #browseDiv > ul {
+    margin-top: 25px;
+  }
+  #browseDiv li {
+    width: 90%;
+  }
+  #browseDiv > img {
+    margin-top: 0;
+    margin-bottom: 15px;
+    width: 25%;
+  }
+  .exploreSection {
+    text-align: center;
+    margin: 2rem 0;
+  }
+
+  .exploreTitle {
+    color: #9ca3af;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .exploreLink {
+    font-size: var(--font-size-sm);
+  }
+}

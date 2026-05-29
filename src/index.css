@@ -52,11 +52,13 @@
 
   /* ======= WIDTHENING ======= */
   --width-standard: 80%;
+  --width-mobile: 90%;
   --width-cards: 30%;
 
   /* ======= TYPOGRAPHY ======= */
   --font-main: 'Inter', 'Roboto', sans-serif;
   --font-display: 'Poppins', 'Montserrat', sans-serif;
+  --font-size-xxs: 0.6em;
   --font-size-xs: 0.8rem;
   --font-size-sm: 1.1rem;
   --font-size-md: 1.8rem;

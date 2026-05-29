@@ -147,9 +147,12 @@ nav {
     font-size: 10px;
   }
 }
-@media (max-width: 500px) {
+@media (max-width: 470px) {
   header {
     justify-content: space-between;
+  }
+  .logoNavLink img {
+    width: 70%;
   }
   #headerUl {
     display: flex;
@@ -195,7 +198,8 @@ nav {
     cursor: pointer;
   }
   #burgerMenu img {
-    width: 100%;
+    width: 80%;
+    height: 80%;
   }
   .profileHeader {
     background-color: rgba(255, 255, 255, 0.363);
